@@ -8,11 +8,11 @@ const NewLineChar = "\n"
 
 func main() {
 
-	str8х8 := " # # # #\n" +
-		" # # # #\n" +
-		" # # # #\n" +
-		" # # # #\n"
-	fmt.Println(str8х8)
+	//str8х8 := " # # # #\n" +
+	//	"# # # # \n" +
+	//	" # # # #\n" +
+	//	"# # # # \n"
+	//fmt.Println(str8х8)
 
 	x := 16
 	y := 16
@@ -23,19 +23,26 @@ func render(x int, y int) string {
 	result := ""
 
 	for i := 0; i < y; i++ {
-		result += axisX(x) + NewLineChar
+
+		if i%2 == 0 {
+			result += makeSequence(x, "#", " ")
+		} else {
+			result += makeSequence(x, " ", "#")
+		}
+
+		result += NewLineChar
 	}
 	return result
 }
 
-func axisX(len int) string {
+func makeSequence(len int, symbol1 string, symbol2 string) string {
 	result := ""
 
 	for i := 0; i < len; i++ {
 		if i%2 == 0 {
-			result += " "
+			result += symbol1
 		} else {
-			result += "#"
+			result += symbol2
 		}
 	}
 
