@@ -1,21 +1,20 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 const NewLineChar = "\n"
 
 func main() {
 
-	//str8х8 := " # # # #\n" +
-	//	"# # # # \n" +
-	//	" # # # #\n" +
-	//	"# # # # \n"
-	//fmt.Println(str8х8)
+	var x int
+	var y int
 
-	x := 16
-	y := 16
+	fmt.Println("Укажите колличество по горизонтали (X)")
+	fmt.Scanf("%d\n", &x)
+
+	fmt.Println("Укажите колличество по вертикали (Y)")
+	fmt.Scanf("%d\n", &y)
+
 	fmt.Println(render(x, y))
 }
 
