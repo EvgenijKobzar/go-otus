@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 const NewLineChar = "\n"
 
@@ -19,31 +22,31 @@ func main() {
 }
 
 func render(x int, y int) string {
-	result := ""
+	result := strings.Builder{}
 
 	for i := 0; i < y; i++ {
 
 		if i%2 == 0 {
-			result += makeSequence(x, "#", " ")
+			result.WriteString(makeSequence(x, "#", " "))
 		} else {
-			result += makeSequence(x, " ", "#")
+			result.WriteString(makeSequence(x, " ", "#"))
 		}
 
-		result += NewLineChar
+		result.WriteString(NewLineChar)
 	}
-	return result
+	return result.String()
 }
 
 func makeSequence(len int, symbol1 string, symbol2 string) string {
-	result := ""
+	result := strings.Builder{}
 
 	for i := 0; i < len; i++ {
 		if i%2 == 0 {
-			result += symbol1
+			result.WriteString(symbol1)
 		} else {
-			result += symbol2
+			result.WriteString(symbol2)
 		}
 	}
 
-	return result
+	return result.String()
 }
