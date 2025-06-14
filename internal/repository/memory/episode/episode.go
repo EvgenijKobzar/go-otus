@@ -30,7 +30,7 @@ func (r *Repository) Load(id int) (*episode.Entity, error) {
 	if entity, ok := r.entity[id]; ok {
 		return &entity, nil
 	} else {
-		return nil, errors.New(`entityentity not found`)
+		return nil, errors.New(`entity not found`)
 	}
 }
 
