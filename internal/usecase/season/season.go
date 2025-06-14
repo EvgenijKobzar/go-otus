@@ -1,16 +1,16 @@
-package serial
+package season
 
 import (
 	e "otus/internal/lib/error"
-	"otus/internal/model"
-	"otus/internal/model/season"
+	model "otus/internal/model/season"
+	repo "otus/internal/repository/memory/season"
 )
 
-func NewUsecase(repo season.Repository) *Usecase {
+func NewUsecase(repo repo.IRepository) *Usecase {
 	return &Usecase{repo: repo}
 }
 
-func (uc *Usecase) Create(params CreateParams, options ...model.SeasonOption) (*model.Season, error) {
+func (uc *Usecase) Create(params CreateParams, options ...model.Option) (*model.Entity, error) {
 
 	s := model.NewSeason()
 

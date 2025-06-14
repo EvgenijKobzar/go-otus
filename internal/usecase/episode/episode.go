@@ -1,23 +1,23 @@
-package serial
+package episode
 
 import (
 	e "otus/internal/lib/error"
-	"otus/internal/model"
-	"otus/internal/model/episode"
+	model "otus/internal/model/episode"
+	repo "otus/internal/repository/memory/episode"
 )
 
-func NewUsecase(repo episode.Repository) *Usecase {
+func NewUsecase(repo repo.IRepository) *Usecase {
 	return &Usecase{repo: repo}
 }
 
-func (uc *Usecase) Create(params CreateParams) (*model.Episode, error) {
+func (uc *Usecase) Create(params CreateParams) (*model.Entity, error) {
+
 	if params.Title == "" {
 		return nil, e.ErrInvalidField("Title")
 	}
 
-	s := &model.Episode{
-		Title: params.Title,
-	}
+	s := model.NewEpisode()
+	s.Title = params.Title
 
 	if err := uc.repo.Save(s); err != nil {
 		return nil, err

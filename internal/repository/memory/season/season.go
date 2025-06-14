@@ -1,43 +1,43 @@
-package serial
+package season
 
 import (
 	"errors"
-	"otus/internal/model"
+	"otus/internal/model/season"
 )
 
 func NewRepository() *Repository {
 	return &Repository{
-		season: make(map[int]model.Season),
+		items:  make(map[int]season.Entity),
 		nextId: 1,
 	}
 }
 
-func (r *Repository) Save(season *model.Season) error {
-	if season.Id == 0 {
-		season.Id = r.nextId
+func (r *Repository) Save(entity *season.Entity) error {
+	if entity.Id == 0 {
+		entity.Id = r.nextId
 		r.nextId++
 	}
-	r.season[season.Id] = *season
+	r.items[entity.Id] = *entity
 	return nil
 }
 
 func (r *Repository) Delete(id int) error {
-	delete(r.season, id)
+	delete(r.items, id)
 	return nil
 }
 
-func (r *Repository) Load(id int) (*model.Season, error) {
-	if season, ok := r.season[id]; ok {
-		return &season, nil
+func (r *Repository) Load(id int) (*season.Entity, error) {
+	if entity, ok := r.items[id]; ok {
+		return &entity, nil
 	} else {
-		return nil, errors.New(`season not found`)
+		return nil, errors.New(`entity not found`)
 	}
 }
 
-func (r *Repository) GetAll() ([]model.Season, error) {
-	var seasons []model.Season
-	for _, season := range r.season {
-		seasons = append(seasons, season)
+func (r *Repository) GetAll() ([]season.Entity, error) {
+	var items []season.Entity
+	for _, entity := range r.items {
+		items = append(items, entity)
 	}
-	return seasons, nil
+	return items, nil
 }

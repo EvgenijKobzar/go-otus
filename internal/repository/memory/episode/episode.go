@@ -1,43 +1,43 @@
-package serial
+package episode
 
 import (
 	"errors"
-	"otus/internal/model"
+	"otus/internal/model/episode"
 )
 
 func NewRepository() *Repository {
 	return &Repository{
-		episode: make(map[int]model.Episode),
-		nextId:  1,
+		entity: make(map[int]episode.Entity),
+		nextId: 1,
 	}
 }
 
-func (r *Repository) Save(episode *model.Episode) error {
-	if episode.Id == 0 {
-		episode.Id = r.nextId
+func (r *Repository) Save(entity *episode.Entity) error {
+	if entity.Id == 0 {
+		entity.Id = r.nextId
 		r.nextId++
 	}
-	r.episode[episode.Id] = *episode
+	r.entity[entity.Id] = *entity
 	return nil
 }
 
 func (r *Repository) Delete(id int) error {
-	delete(r.episode, id)
+	delete(r.entity, id)
 	return nil
 }
 
-func (r *Repository) Load(id int) (*model.Episode, error) {
-	if episode, ok := r.episode[id]; ok {
-		return &episode, nil
+func (r *Repository) Load(id int) (*episode.Entity, error) {
+	if entity, ok := r.entity[id]; ok {
+		return &entity, nil
 	} else {
-		return nil, errors.New(`episode not found`)
+		return nil, errors.New(`entityentity not found`)
 	}
 }
 
-func (r *Repository) GetAll() ([]model.Episode, error) {
-	var episodes []model.Episode
-	for _, episode := range r.episode {
-		episodes = append(episodes, episode)
+func (r *Repository) GetAll() ([]episode.Entity, error) {
+	var items []episode.Entity
+	for _, entity := range r.entity {
+		items = append(items, entity)
 	}
-	return episodes, nil
+	return items, nil
 }

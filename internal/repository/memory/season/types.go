@@ -1,8 +1,15 @@
-package serial
+package season
 
-import "otus/internal/model"
+import "otus/internal/model/season"
+
+type IRepository interface {
+	GetAll() ([]season.Entity, error)
+	Load(id int) (*season.Entity, error)
+	Save(entity *season.Entity) error
+	Delete(id int) error
+}
 
 type Repository struct {
-	season map[int]model.Season
+	items  map[int]season.Entity
 	nextId int
 }

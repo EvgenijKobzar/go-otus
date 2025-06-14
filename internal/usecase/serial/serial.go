@@ -2,23 +2,16 @@ package serial
 
 import (
 	e "otus/internal/lib/error"
-	"otus/internal/model"
-	"otus/internal/model/serial"
+	model "otus/internal/model/serial"
+	repo "otus/internal/repository/memory/serial"
 )
 
-func NewUsecase(repo serial.Repository) *Usecase {
+func NewUsecase(repo repo.IRepository) *Usecase {
 	return &Usecase{repo: repo}
 }
 
-//func (uc *Usecase) NewSerial(options ...model.Option) *model.Serial {
-//	opts := &model.Serial{Title: "test"} // значения по умолчанию
-//	for _, option := range options {
-//		option(opts)
-//	}
-//	return opts
-//}
+func (uc *Usecase) Create(params CreateParams, options ...model.Option) (*model.Entity, error) {
 
-func (uc *Usecase) Create(params CreateParams, options ...model.SerialOption) (*model.Serial, error) {
 	s := model.NewSerial()
 
 	for _, option := range options {

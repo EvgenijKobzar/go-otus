@@ -1,11 +1,11 @@
-package serial
+package season
 
 import (
-	"otus/internal/model/season"
+	repo "otus/internal/repository/memory/season"
 )
 
 type Usecase struct {
-	repo season.Repository
+	repo repo.IRepository
 }
 
 type CreateParams struct {

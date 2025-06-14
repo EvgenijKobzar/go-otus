@@ -1,11 +1,11 @@
 package serial
 
 import (
-	"otus/internal/model/serial"
+	repo "otus/internal/repository/memory/serial"
 )
 
 type Usecase struct {
-	repo serial.Repository
+	repo repo.IRepository
 }
 
 type CreateParams struct {
