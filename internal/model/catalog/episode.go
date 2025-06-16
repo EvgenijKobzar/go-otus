@@ -1,6 +1,6 @@
-package episode
+package catalog
 
-type Entity struct {
+type Episode struct {
 	Id             int     `json:"id,omitempty"`
 	Title          string  `json:"title,omitempty"`
 	FileId         int     `json:"fileId,omitempty"`
@@ -17,6 +17,14 @@ type Entity struct {
 	CreatedBy      int     `json:"created_by,omitempty"`
 }
 
-func NewEpisode() *Entity {
-	return &Entity{}
+func NewEpisode() Episode {
+	return Episode{}
+}
+
+func (e Episode) GetId() int {
+	return e.Id
+}
+
+func (e Episode) SetId(id int) {
+	e.Id = int(id)
 }

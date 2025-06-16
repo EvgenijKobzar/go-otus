@@ -1,8 +1,6 @@
-package serial
+package catalog
 
-import "otus/internal/model/season"
-
-type Entity struct {
+type Serial struct {
 	Id               int     `json:"id,omitempty"`
 	Title            string  `json:"title,omitempty"`
 	FileId           int     `json:"file_id,omitempty"`
@@ -12,19 +10,27 @@ type Entity struct {
 	Sort             int     `json:"sort,omitempty"`
 	ProductionPeriod string  `json:"production_period,omitempty"`
 	Quality          string  `json:"quality,omitempty"`
-	seasons          map[int]season.Entity
+	seasons          map[int]Season
 }
 
-type Option func(*Entity)
+func (s Serial) GetId() int {
+	return s.Id
+}
 
-func WithSeason(season *season.Entity) Option {
-	return func(opts *Entity) {
+func (s Serial) SetId(id int) {
+	s.Id = int(id)
+}
+
+type SerialOption func(*Serial)
+
+func WithSeason(season *Season) SerialOption {
+	return func(opts *Serial) {
 		opts.seasons[season.Id] = *season
 	}
 }
 
-func NewSerial() *Entity {
-	return &Entity{
-		seasons: make(map[int]season.Entity),
+func NewSerial() Serial {
+	return Serial{
+		seasons: make(map[int]Season),
 	}
 }
