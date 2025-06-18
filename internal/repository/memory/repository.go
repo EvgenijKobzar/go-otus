@@ -45,3 +45,8 @@ func (r *Repository[T]) GetAll() ([]T, error) {
 	}
 	return items, nil
 }
+
+func (r *Repository[T]) Count() int {
+	items, _ := r.GetAll()
+	return len(items)
+}
