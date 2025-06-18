@@ -13,6 +13,8 @@ func NewRepository[T catalog.HasId]() *Repository[T] {
 }
 
 func (r *Repository[T]) Save(entity T) error {
+	r.imx.Lock()
+	defer r.imx.Unlock()
 	if entity.GetId() == 0 {
 		entity.SetId(r.nextId)
 		r.nextId++
@@ -35,6 +37,8 @@ func (r *Repository[T]) Load(id int) (*T, error) {
 }
 
 func (r *Repository[T]) GetAll() ([]T, error) {
+	r.imx.RLock()
+	r.imx.RUnlock()
 	var items []T
 	for _, entity := range r.items {
 		items = append(items, entity)

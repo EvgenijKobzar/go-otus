@@ -1,6 +1,9 @@
 package memory
 
-import "otus/internal/model/catalog"
+import (
+	"otus/internal/model/catalog"
+	"sync"
+)
 
 type IRepository[T catalog.HasId] interface {
 	GetAll() ([]T, error)
@@ -10,6 +13,7 @@ type IRepository[T catalog.HasId] interface {
 }
 
 type Repository[T catalog.HasId] struct {
+	imx    sync.RWMutex
 	items  map[int]T
 	nextId int
 }
