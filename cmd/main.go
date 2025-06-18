@@ -2,33 +2,34 @@ package main
 
 import (
 	"fmt"
-	modelSeason "otus/internal/model/season"
-	modelSerial "otus/internal/model/serial"
-	repoEpisode "otus/internal/repository/memory/episode"
-	repoSeason "otus/internal/repository/memory/season"
-	repoSerial "otus/internal/repository/memory/serial"
-	ue "otus/internal/usecase/episode"
-	usn "otus/internal/usecase/season"
-	us "otus/internal/usecase/serial"
+	c "otus/internal/model/catalog"
+	m "otus/internal/repository/memory"
+	us "otus/internal/usecase"
 )
 
 func main() {
+	repo := m.NewRepository[*c.Serial]()
+	repoEpisode := m.NewRepository[*c.Episode]()
 
-	repo := repoSerial.NewRepository()
-
-	episode, _ := ue.NewUsecase(repoEpisode.NewRepository()).Create(ue.CreateParams{
+	episode, _ := us.NewUsecase(repoEpisode).Create(us.EpisodeCreateParams{
 		Title: "Фелина",
 	})
 
-	season, _ := usn.NewUsecase(repoSeason.NewRepository()).Create(usn.CreateParams{
+	episode2, _ := us.NewUsecase(repoEpisode).Create(us.EpisodeCreateParams{
+		Title: "Фелина2",
+	})
+
+	season, _ := us.NewUsecase(m.NewRepository[*c.Season]()).Create(us.SeasonCreateParams{
 		Title: "5 сезон",
-	},
-		modelSeason.WithEpisode(episode))
+	}, c.WithEpisode(episode), c.WithEpisode(episode2))
 
-	us.NewUsecase(repo).Create(us.CreateParams{
+	us.NewUsecase(repo).Create(us.SerialCreateParams{
 		Title: "Breaking Bad",
-	},
-		modelSerial.WithSeason(season))
+	}, c.WithSeason(season))
 
-	fmt.Println(repo.GetAll())
+	items, _ := repo.GetAll()
+	for _, item := range items {
+		fmt.Println(*item)
+	}
+	//fmt.Println(items)
 }
