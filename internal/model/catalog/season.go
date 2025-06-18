@@ -10,16 +10,16 @@ type Season struct {
 	episodes  map[int]Episode
 }
 
-func (s Season) GetId() int {
+func (s *Season) GetId() int {
 	return s.Id
 }
 
-func (s Season) SetId(id int) {
-	s.Id = int(id)
+func (s *Season) SetId(id int) {
+	s.Id = id
 }
 
-func NewSeason() Season {
-	return Season{
+func NewSeason() *Season {
+	return &Season{
 		episodes: make(map[int]Episode),
 	}
 }

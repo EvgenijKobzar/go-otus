@@ -5,7 +5,7 @@ import (
 	"otus/internal/model/catalog"
 )
 
-func EpisodeCreate(params EpisodeCreateParams) (catalog.Episode, error) {
+func EpisodeCreate(params EpisodeCreateParams) (*catalog.Episode, error) {
 
 	s := catalog.NewEpisode()
 

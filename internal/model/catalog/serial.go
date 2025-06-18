@@ -13,12 +13,12 @@ type Serial struct {
 	seasons          map[int]Season
 }
 
-func (s Serial) GetId() int {
+func (s *Serial) GetId() int {
 	return s.Id
 }
 
-func (s Serial) SetId(id int) {
-	s.Id = int(id)
+func (s *Serial) SetId(id int) {
+	s.Id = id
 }
 
 type SerialOption func(*Serial)
@@ -29,8 +29,8 @@ func WithSeason(season *Season) SerialOption {
 	}
 }
 
-func NewSerial() Serial {
-	return Serial{
+func NewSerial() *Serial {
+	return &Serial{
 		seasons: make(map[int]Season),
 	}
 }

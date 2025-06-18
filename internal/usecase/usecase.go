@@ -15,7 +15,7 @@ func (uc *Usecase[T]) Create(params any, options ...any) (T, error) {
 	var entity T
 
 	switch any(entity).(type) {
-	case catalog.Serial:
+	case *catalog.Serial:
 		var serialOptions []catalog.SerialOption
 
 		for _, option := range options {
@@ -29,7 +29,7 @@ func (uc *Usecase[T]) Create(params any, options ...any) (T, error) {
 			entity = any(serial).(T)
 		}
 
-	case catalog.Season:
+	case *catalog.Season:
 		var seasonOptions []catalog.SeasonOption
 
 		for _, option := range options {
@@ -42,7 +42,7 @@ func (uc *Usecase[T]) Create(params any, options ...any) (T, error) {
 			season, _ := SeasonCreate(createParams, seasonOptions...)
 			entity = any(season).(T)
 		}
-	case catalog.Episode:
+	case *catalog.Episode:
 		if createParams, ok := params.(EpisodeCreateParams); ok {
 			episode, _ := EpisodeCreate(createParams)
 			entity = any(episode).(T)

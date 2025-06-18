@@ -17,14 +17,14 @@ type Episode struct {
 	CreatedBy      int     `json:"created_by,omitempty"`
 }
 
-func NewEpisode() Episode {
-	return Episode{}
+func NewEpisode() *Episode {
+	return &Episode{}
 }
 
-func (e Episode) GetId() int {
+func (e *Episode) GetId() int {
 	return e.Id
 }
 
-func (e Episode) SetId(id int) {
-	e.Id = int(id)
+func (e *Episode) SetId(id int) {
+	e.Id = id
 }

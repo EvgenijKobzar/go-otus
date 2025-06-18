@@ -8,19 +8,28 @@ import (
 )
 
 func main() {
-	repo := m.NewRepository[c.Serial]()
+	repo := m.NewRepository[*c.Serial]()
+	repoEpisode := m.NewRepository[*c.Episode]()
 
-	episode, _ := us.NewUsecase(m.NewRepository[c.Episode]()).Create(us.EpisodeCreateParams{
+	episode, _ := us.NewUsecase(repoEpisode).Create(us.EpisodeCreateParams{
 		Title: "Фелина",
 	})
 
-	season, _ := us.NewUsecase(m.NewRepository[c.Season]()).Create(us.SeasonCreateParams{
+	episode2, _ := us.NewUsecase(repoEpisode).Create(us.EpisodeCreateParams{
+		Title: "Фелина2",
+	})
+
+	season, _ := us.NewUsecase(m.NewRepository[*c.Season]()).Create(us.SeasonCreateParams{
 		Title: "5 сезон",
-	}, c.WithEpisode(&episode))
+	}, c.WithEpisode(episode), c.WithEpisode(episode2))
 
 	us.NewUsecase(repo).Create(us.SerialCreateParams{
 		Title: "Breaking Bad",
-	}, c.WithSeason(&season))
+	}, c.WithSeason(season))
 
-	fmt.Println(repo.GetAll())
+	items, _ := repo.GetAll()
+	for _, item := range items {
+		fmt.Println(*item)
+	}
+	//fmt.Println(items)
 }

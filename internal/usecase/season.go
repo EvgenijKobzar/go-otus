@@ -5,12 +5,12 @@ import (
 	"otus/internal/model/catalog"
 )
 
-func SeasonCreate(params SeasonCreateParams, options ...catalog.SeasonOption) (catalog.Season, error) {
+func SeasonCreate(params SeasonCreateParams, options ...catalog.SeasonOption) (*catalog.Season, error) {
 
 	s := catalog.NewSeason()
 
 	for _, option := range options {
-		option(&s)
+		option(s)
 	}
 
 	if params.Title == "" {
