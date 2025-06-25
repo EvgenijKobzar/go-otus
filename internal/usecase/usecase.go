@@ -2,10 +2,10 @@ package usecase
 
 import (
 	"otus/internal/model/catalog"
-	"otus/internal/repository/memory"
+	"otus/internal/repository/file"
 )
 
-func NewUsecase[T catalog.HasId](repo *memory.Repository[T]) *Usecase[T] {
+func NewUsecase[T catalog.HasId](repo *file.Repository[T]) *Usecase[T] {
 	return &Usecase[T]{
 		repo: repo,
 	}

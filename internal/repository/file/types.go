@@ -1,4 +1,4 @@
-package memory
+package file
 
 import (
 	"otus/internal/model/catalog"

@@ -1,0 +1,53 @@
+package config
+
+import (
+	"encoding/json"
+	"errors"
+	"os"
+	"otus/internal/model/catalog"
+)
+
+type FilePathConfig struct {
+	Serial  string `json:"serial"`
+	Season  string `json:"season"`
+	Episode string `json:"episode"`
+}
+
+type Config struct {
+	FilePath FilePathConfig `json:"filepath"`
+}
+
+func LoadConfig(path string) (*Config, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var cfg Config
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return &cfg, nil
+}
+
+func ResolvePathByEntityType[T catalog.HasId](entity T) (string, error) {
+
+	configApp, _ := LoadConfig("config.json")
+
+	var path string
+	switch any(entity).(type) {
+	case *catalog.Serial:
+		path = configApp.FilePath.Serial
+	case *catalog.Season:
+		path = configApp.FilePath.Season
+	case *catalog.Episode:
+		path = configApp.FilePath.Episode
+	default:
+		return "", errors.New("invalid entity type")
+	}
+	return path, nil
+}

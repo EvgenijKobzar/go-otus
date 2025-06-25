@@ -1,0 +1,7 @@
+{
+  "filepath": {
+    "serial": "internal/db/file/serial.json",
+    "season": "internal/db/file/season.json",
+    "episode": "internal/db/file/episode.json"
+  }
+}
