@@ -1,8 +1,8 @@
-package account
+package model
 
 import "time"
 
-type Entity struct {
+type Account struct {
 	Id        int       `json:"id,omitempty"`
 	Name      string    `json:"name,omitempty"`
 	FirstName string    `json:"first_name,omitempty"`
