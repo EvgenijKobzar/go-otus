@@ -9,12 +9,6 @@ import (
 const KeyResponse = "response"
 const KeyError = "error"
 
-type Serial struct {
-	start    time.Time
-	end      time.Time
-	duration time.Duration
-}
-
 func Process(c *gin.Context) {
 
 	err, ok := Internalize(c)

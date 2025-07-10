@@ -31,7 +31,13 @@ func internalizeGet(c *gin.Context) error {
 	}
 	return nil
 }
-func internalizeAdd(c *gin.Context) {}
+func internalizeAdd(c *gin.Context) error {
+	fields := c.QueryMap("fields")
+	if len(fields) == 0 {
+		return errors.New("fields is required")
+	}
+	return nil
+}
 func internalizeUpdate(c *gin.Context) error {
 	err := internalizeGet(c)
 	if err != nil {
@@ -60,7 +66,7 @@ func Internalize(c *gin.Context) (error, bool) {
 	case ActionGet:
 		err = internalizeGet(c)
 	case ActionAdd:
-		internalizeAdd(c)
+		err = internalizeAdd(c)
 	case ActionUpdate:
 		err = internalizeUpdate(c)
 	case ActionList:

@@ -9,59 +9,54 @@ import (
 	"strconv"
 )
 
-const Item = "serial"
-const Items = "serials"
-
-// http://localhost:8080/v1/otus.serial.update?id=53&fields[title]=123
-// http://localhost:8080/v1/otus.serial.get?id=1
-// http://localhost:8080/v1/otus.serial.add?fields[id]=test1&fields[title]=test4&fields[sort]=4
-// http://localhost:8080/v1/otus.serial.delete?id=57
-// http://localhost:8080/v1/otus.serial.list
+const Item = "item"
+const Items = "items"
 
 // Action region
-func GetSerialAction(c *gin.Context) {
+func GetAction[T catalog.HasId](c *gin.Context) {
 	var result gin.H
 	id, err := strconv.Atoi(c.Query("id"))
 	if err == nil {
-		result, err = getSerial(id)
+		result, err = getSerial[T](id)
 	}
 	setResponse(result, err, c)
 }
 
-func AddSerialAction(c *gin.Context) {
+func AddAction[T catalog.HasId](c *gin.Context) {
 	var result gin.H
-	var binding catalog.Serial
-	err := c.ShouldBindQuery(&binding)
+	bindings := new(T)
+
+	err := c.ShouldBindQuery(bindings)
 
 	if err == nil {
-		result, err = addSerial(binding)
+		result, err = addInner[T](bindings)
 	}
 	setResponse(result, err, c)
 }
 
-func UpdateSerialAction(c *gin.Context) {
-	var result gin.H
-	id, err := strconv.Atoi(c.Query("id"))
-	if err == nil {
-		result, err = updateSerial(id, c)
-	}
-	setResponse(result, err, c)
-}
-
-func DeleteSerialAction(c *gin.Context) {
+func UpdateAction[T catalog.HasId](c *gin.Context) {
 	var result gin.H
 	id, err := strconv.Atoi(c.Query("id"))
 	if err == nil {
-		result, err = deleteSerial(id)
+		result, err = updateInner[T](id, c)
 	}
 	setResponse(result, err, c)
 }
 
-func GetListSerialAction(c *gin.Context) {
+func DeleteAction[T catalog.HasId](c *gin.Context) {
+	var result gin.H
+	id, err := strconv.Atoi(c.Query("id"))
+	if err == nil {
+		result, err = deleteInner[T](id)
+	}
+	setResponse(result, err, c)
+}
+
+func GetListAction[T catalog.HasId](c *gin.Context) {
 	var err error
 	var result gin.H
 
-	repo := f.NewRepository[*catalog.Serial]()
+	repo := f.NewRepository[T]()
 	items, _ := repo.GetAll()
 
 	result = gin.H{Items: items}
@@ -70,12 +65,13 @@ func GetListSerialAction(c *gin.Context) {
 }
 
 // end region
-func getSerial(id int) (gin.H, error) {
+
+func getSerial[T catalog.HasId](id int) (gin.H, error) {
 	var err error
 	var result gin.H
-	var entity *catalog.Serial
+	var entity T
 
-	repo := f.NewRepository[*catalog.Serial]()
+	repo := f.NewRepository[T]()
 	if entity, err = repo.GetById(id); err == nil {
 		result = gin.H{Item: entity}
 	}
@@ -83,31 +79,31 @@ func getSerial(id int) (gin.H, error) {
 	return result, err
 }
 
-func addSerial(binding catalog.Serial) (gin.H, error) {
+func addInner[T catalog.HasId](binding *T) (gin.H, error) {
 	var err error
 	var result gin.H
-	repo := f.NewRepository[*catalog.Serial]()
-	if err = repo.Save(&binding); err == nil {
+	repo := f.NewRepository[T]()
+	if err = repo.Save(*binding); err == nil {
 		result = gin.H{Item: binding}
 	}
 	return result, err
 }
 
-func updateSerial(id int, c *gin.Context) (gin.H, error) {
+func updateInner[T catalog.HasId](id int, c *gin.Context) (gin.H, error) {
 	var err error
 	var result gin.H
-	var entity *catalog.Serial
+	var entity T
 
-	repo := f.NewRepository[*catalog.Serial]()
+	repo := f.NewRepository[T]()
 
 	entity, err = repo.GetById(id)
 
 	if err == nil {
-		var bindings catalog.Serial
+		bindings := new(T)
 
-		if err = c.ShouldBindQuery(&bindings); err == nil {
+		if err = c.ShouldBindQuery(bindings); err == nil {
 			allowedFields := c.QueryMap("fields")
-			if err = entityAssign(entity, bindings, allowedFields); err == nil {
+			if err = entityAssign[T](entity, *bindings, allowedFields); err == nil {
 				if err = repo.Save(entity); err == nil {
 					result = gin.H{Item: entity}
 				}
@@ -117,7 +113,7 @@ func updateSerial(id int, c *gin.Context) (gin.H, error) {
 	return result, err
 }
 
-func entityAssign(entity *catalog.Serial, bindings catalog.Serial, allowedFields map[string]string) error {
+func entityAssign[T catalog.HasId](entity T, bindings T, allowedFields map[string]string) error {
 	var err error
 	var srcMap map[string]any
 	var distMap map[string]any
@@ -145,12 +141,11 @@ func assign(src map[string]any, dist map[string]any, allowed map[string]string) 
 	return result
 }
 
-func deleteSerial(id int) (gin.H, error) {
+func deleteInner[T catalog.HasId](id int) (gin.H, error) {
 	var err error
 	var result gin.H
-	var _ *catalog.Serial
 
-	repo := f.NewRepository[*catalog.Serial]()
+	repo := f.NewRepository[T]()
 
 	_, err = repo.GetById(id)
 
