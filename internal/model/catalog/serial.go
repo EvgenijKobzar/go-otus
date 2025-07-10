@@ -1,15 +1,15 @@
 package catalog
 
 type Serial struct {
-	Id               int     `json:"id,omitempty"`
-	Title            string  `json:"title,omitempty"`
-	FileId           int     `json:"file_id,omitempty"`
-	Description      string  `json:"description,omitempty"`
-	Rating           float64 `json:"rating,omitempty"`
-	Duration         float64 `json:"duration,omitempty"`
-	Sort             int     `json:"sort,omitempty"`
-	ProductionPeriod string  `json:"production_period,omitempty"`
-	Quality          string  `json:"quality,omitempty"`
+	Id               int     `json:"id"`
+	Title            string  `json:"title" binding:"required" form:"fields[title]"`
+	FileId           int     `json:"file_id" form:"fields[fileId]"`
+	Description      string  `json:"description" form:"fields[description]"`
+	Rating           float64 `json:"rating" form:"fields[rating]"`
+	Duration         float64 `json:"duration" form:"fields[duration]"`
+	Sort             int     `json:"sort" form:"fields[sort]"`
+	ProductionPeriod string  `json:"production_period" form:"fields[productionPeriod]"`
+	Quality          string  `json:"quality" form:"fields[quality]"`
 	seasons          map[int]Season
 }
 

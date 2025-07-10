@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"otus/config"
+	"otus/internal/config"
 	"otus/internal/model/catalog"
 )
 
@@ -32,6 +32,9 @@ func (r *Repository[T]) Save(entity T) error {
 
 func (r *Repository[T]) Delete(id int) error {
 	delete(r.items, id)
+
+	var entity T
+	go r.saveToFile(entity)
 	return nil
 }
 
@@ -51,6 +54,17 @@ func (r *Repository[T]) GetAll() ([]T, error) {
 		items = append(items, entity)
 	}
 	return items, nil
+}
+
+func (r *Repository[T]) GetById(id int) (T, error) {
+	items, _ := r.GetAll()
+	for _, entity := range items {
+		if entity.GetId() == id {
+			return entity, nil
+		}
+	}
+	var entity T
+	return entity, errors.New(`entity not found`)
 }
 
 func (r *Repository[T]) Count() int {
