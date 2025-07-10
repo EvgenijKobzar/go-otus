@@ -14,42 +14,41 @@ const Items = "items"
 
 // Action region
 func GetAction[T catalog.HasId](c *gin.Context) {
-	var result gin.H
+	var entity T
 	id, err := strconv.Atoi(c.Query("id"))
 	if err == nil {
-		result, err = getSerial[T](id)
+		entity, err = getInner[T](id)
 	}
-	setResponse(result, err, c)
+	setResponse(gin.H{Item: entity}, err, c)
 }
 
 func AddAction[T catalog.HasId](c *gin.Context) {
-	var result gin.H
+	var entity *T
 	bindings := new(T)
 
 	err := c.ShouldBindQuery(bindings)
 
 	if err == nil {
-		result, err = addInner[T](bindings)
+		entity, err = addInner[T](bindings)
 	}
-	setResponse(result, err, c)
+	setResponse(gin.H{Item: entity}, err, c)
 }
 
 func UpdateAction[T catalog.HasId](c *gin.Context) {
-	var result gin.H
+	var entity T
 	id, err := strconv.Atoi(c.Query("id"))
 	if err == nil {
-		result, err = updateInner[T](id, c)
+		entity, err = updateInner[T](id, c)
 	}
-	setResponse(result, err, c)
+	setResponse(gin.H{Item: entity}, err, c)
 }
 
 func DeleteAction[T catalog.HasId](c *gin.Context) {
-	var result gin.H
 	id, err := strconv.Atoi(c.Query("id"))
 	if err == nil {
-		result, err = deleteInner[T](id)
+		err = deleteInner[T](id)
 	}
-	setResponse(result, err, c)
+	setResponse(gin.H{"deleted": true}, err, c)
 }
 
 func GetListAction[T catalog.HasId](c *gin.Context) {
@@ -66,32 +65,22 @@ func GetListAction[T catalog.HasId](c *gin.Context) {
 
 // end region
 
-func getSerial[T catalog.HasId](id int) (gin.H, error) {
-	var err error
-	var result gin.H
-	var entity T
-
+func getInner[T catalog.HasId](id int) (T, error) {
 	repo := f.NewRepository[T]()
-	if entity, err = repo.GetById(id); err == nil {
-		result = gin.H{Item: entity}
-	}
-
-	return result, err
+	return repo.GetById(id)
 }
 
-func addInner[T catalog.HasId](binding *T) (gin.H, error) {
+func addInner[T catalog.HasId](binding *T) (*T, error) {
 	var err error
-	var result gin.H
 	repo := f.NewRepository[T]()
 	if err = repo.Save(*binding); err == nil {
-		result = gin.H{Item: binding}
+		return binding, nil
 	}
-	return result, err
+	return nil, err
 }
 
-func updateInner[T catalog.HasId](id int, c *gin.Context) (gin.H, error) {
+func updateInner[T catalog.HasId](id int, c *gin.Context) (T, error) {
 	var err error
-	var result gin.H
 	var entity T
 
 	repo := f.NewRepository[T]()
@@ -104,13 +93,11 @@ func updateInner[T catalog.HasId](id int, c *gin.Context) (gin.H, error) {
 		if err = c.ShouldBindQuery(bindings); err == nil {
 			allowedFields := c.QueryMap("fields")
 			if err = entityAssign[T](entity, *bindings, allowedFields); err == nil {
-				if err = repo.Save(entity); err == nil {
-					result = gin.H{Item: entity}
-				}
+				err = repo.Save(entity)
 			}
 		}
 	}
-	return result, err
+	return entity, err
 }
 
 func entityAssign[T catalog.HasId](entity T, bindings T, allowedFields map[string]string) error {
@@ -141,20 +128,17 @@ func assign(src map[string]any, dist map[string]any, allowed map[string]string) 
 	return result
 }
 
-func deleteInner[T catalog.HasId](id int) (gin.H, error) {
+func deleteInner[T catalog.HasId](id int) error {
 	var err error
-	var result gin.H
 
 	repo := f.NewRepository[T]()
 
 	_, err = repo.GetById(id)
 
 	if err == nil {
-		if err = repo.Delete(id); err == nil {
-			result = gin.H{"deleted": true}
-		}
+		err = repo.Delete(id)
 	}
-	return result, err
+	return err
 }
 
 func setResponse(result gin.H, err error, c *gin.Context) {

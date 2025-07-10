@@ -10,8 +10,8 @@ import (
 // http://localhost:8080/v1/otus.serial.get?id=1
 // http://localhost:8080/v1/otus.serial.add?fields[title]=test4&fields[sort]=4
 // http://localhost:8080/v1/otus.serial.list
-// http://localhost:8080/v1/otus.serial.update?id=64&fields[title]=123
-// http://localhost:8080/v1/otus.serial.delete?id=57
+// http://localhost:8080/v1/otus.serial.update?id=2&fields[title]=123
+// http://localhost:8080/v1/otus.serial.delete?id=2
 
 // http://localhost:8080/v1/otus.episode.get?id=1
 // http://localhost:8080/v1/otus.episode.add?fields[title]=test4
