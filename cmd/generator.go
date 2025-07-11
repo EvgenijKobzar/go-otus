@@ -1,4 +1,4 @@
-package main
+package generator
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"os"
 	"os/signal"
 	c "otus/internal/model/catalog"
-	m "otus/internal/repository/memory"
+	f "otus/internal/repository/file"
 	us "otus/internal/usecase"
 	"slices"
 	"strconv"
@@ -17,7 +17,7 @@ import (
 	"time"
 )
 
-func startLogger(done <-chan bool, ticker *time.Ticker, repoEpisode *m.Repository[*c.Episode]) {
+func startLogger(done <-chan bool, ticker *time.Ticker, repoEpisode *f.Repository[*c.Episode]) {
 	var inxList []int
 
 	for {
@@ -44,7 +44,7 @@ func startLogger(done <-chan bool, ticker *time.Ticker, repoEpisode *m.Repositor
 	}
 }
 
-func createEpisode(ch chan<- *c.Episode, titles [8]string, repoEpisode *m.Repository[*c.Episode]) {
+func createEpisode(ch chan<- *c.Episode, titles [8]string, repoEpisode *f.Repository[*c.Episode]) {
 	wg := sync.WaitGroup{}
 	wg.Add(len(titles))
 	for _, title := range titles {
@@ -72,7 +72,7 @@ func createEpisode(ch chan<- *c.Episode, titles [8]string, repoEpisode *m.Reposi
 }
 
 func createSeason(ch <-chan *c.Episode, chSeason chan<- *c.Season) {
-	season, _ := us.NewUsecase(m.NewRepository[*c.Season]()).Create(us.SeasonCreateParams{
+	season, _ := us.NewUsecase(f.NewRepository[*c.Season]()).Create(us.SeasonCreateParams{
 		Title: "5 сезон",
 	})
 
@@ -82,14 +82,14 @@ func createSeason(ch <-chan *c.Episode, chSeason chan<- *c.Season) {
 	chSeason <- season
 }
 
-func createSerial(season *c.Season, title string, repo *m.Repository[*c.Serial]) (*c.Serial, error) {
+func createSerial(season *c.Season, title string, repo *f.Repository[*c.Serial]) (*c.Serial, error) {
 	serial, err := us.NewUsecase(repo).Create(us.SerialCreateParams{
 		Title: title,
 	}, c.WithSeason(season))
 	return serial, err
 }
 
-func generateSerial(ctx context.Context, repo *m.Repository[*c.Serial], wg *sync.WaitGroup) {
+func generateSerial(ctx context.Context, repo *f.Repository[*c.Serial], wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	for {
@@ -110,8 +110,8 @@ func generateSerial(ctx context.Context, repo *m.Repository[*c.Serial], wg *sync
 }
 
 func main() {
-	repo := m.NewRepository[*c.Serial]()
-	repoEpisode := m.NewRepository[*c.Episode]()
+	repo := f.NewRepository[*c.Serial]()
+	repoEpisode := f.NewRepository[*c.Episode]()
 
 	ticker := time.NewTicker(200 * time.Millisecond)
 	done := make(chan bool)
