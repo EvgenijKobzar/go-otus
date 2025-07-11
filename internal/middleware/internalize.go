@@ -14,8 +14,9 @@ const ActionUpdate = "update"
 const ActionDelete = "delete"
 
 func GetActonByFullPath(handlerName string) string {
-	delimiter := "."
-	items := strings.Split(handlerName, delimiter)
+
+	paths := strings.Split(handlerName, "/")
+	items := strings.Split(paths[2], ".")
 	if len(items) > 0 && len(items[0]) > 0 {
 		return items[len(items)-1]
 	}
@@ -23,7 +24,7 @@ func GetActonByFullPath(handlerName string) string {
 }
 
 func internalizeGet(c *gin.Context) error {
-	id, err := strconv.Atoi(c.Query("id"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return errors.New("invalid id")
 	} else if id == 0 {
@@ -32,7 +33,7 @@ func internalizeGet(c *gin.Context) error {
 	return nil
 }
 func internalizeAdd(c *gin.Context) error {
-	fields := c.QueryMap("fields")
+	fields := c.PostFormMap("fields")
 	if len(fields) == 0 {
 		return errors.New("fields is required")
 	}
@@ -44,7 +45,7 @@ func internalizeUpdate(c *gin.Context) error {
 		return err
 	}
 
-	fields := c.QueryMap("fields")
+	fields := c.PostFormMap("fields")
 	if len(fields) == 0 {
 		return errors.New("fields is required")
 	}
@@ -61,16 +62,15 @@ func internalizeDelete(c *gin.Context) error {
 func Internalize(c *gin.Context) (error, bool) {
 	var err error
 	action := GetActonByFullPath(c.FullPath())
-
 	switch action {
 	case ActionGet:
 		err = internalizeGet(c)
 	case ActionAdd:
 		err = internalizeAdd(c)
-	case ActionUpdate:
-		err = internalizeUpdate(c)
 	case ActionList:
 		err = internalizeList(c)
+	case ActionUpdate:
+		err = internalizeUpdate(c)
 	case ActionDelete:
 		err = internalizeDelete(c)
 	default:

@@ -15,7 +15,7 @@ const Items = "items"
 // Action region
 func GetAction[T catalog.HasId](c *gin.Context) {
 	var entity T
-	id, err := strconv.Atoi(c.Query("id"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err == nil {
 		entity, err = getInner[T](id)
 	}
@@ -26,7 +26,7 @@ func AddAction[T catalog.HasId](c *gin.Context) {
 	var entity *T
 	bindings := new(T)
 
-	err := c.ShouldBindQuery(bindings)
+	err := c.ShouldBind(bindings)
 
 	if err == nil {
 		entity, err = addInner[T](bindings)
@@ -36,7 +36,7 @@ func AddAction[T catalog.HasId](c *gin.Context) {
 
 func UpdateAction[T catalog.HasId](c *gin.Context) {
 	var entity T
-	id, err := strconv.Atoi(c.Query("id"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err == nil {
 		entity, err = updateInner[T](id, c)
 	}
@@ -44,7 +44,7 @@ func UpdateAction[T catalog.HasId](c *gin.Context) {
 }
 
 func DeleteAction[T catalog.HasId](c *gin.Context) {
-	id, err := strconv.Atoi(c.Query("id"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err == nil {
 		err = deleteInner[T](id)
 	}
@@ -90,8 +90,8 @@ func updateInner[T catalog.HasId](id int, c *gin.Context) (T, error) {
 	if err == nil {
 		bindings := new(T)
 
-		if err = c.ShouldBindQuery(bindings); err == nil {
-			allowedFields := c.QueryMap("fields")
+		if err = c.ShouldBind(bindings); err == nil {
+			allowedFields := c.PostFormMap("fields")
 			if err = entityAssign[T](entity, *bindings, allowedFields); err == nil {
 				err = repo.Save(entity)
 			}
