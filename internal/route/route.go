@@ -7,24 +7,6 @@ import (
 	"otus/internal/model/catalog"
 )
 
-// http://localhost:8080/v1/otus.serial.get?id=1
-// http://localhost:8080/v1/otus.serial.add?fields[title]=test4&fields[sort]=4
-// http://localhost:8080/v1/otus.serial.list
-// http://localhost:8080/v1/otus.serial.update?id=2&fields[title]=123
-// http://localhost:8080/v1/otus.serial.delete?id=2
-
-// http://localhost:8080/v1/otus.episode.get?id=1
-// http://localhost:8080/v1/otus.episode.add?fields[title]=test4
-// http://localhost:8080/v1/otus.episode.list
-// http://localhost:8080/v1/otus.episode.update?id=1&fields[serialId]=1&fields[seasonId]=1&fields[title]=%D0%9F%D1%80%D0%B8%D0%B7%D0%BD%D0%B0%D0%BD%D0%B8%D1%8F
-// http://localhost:8080/v1/otus.episode.delete?id=17
-
-// http://localhost:8080/v1/otus.season.get?id=1
-// http://localhost:8080/v1/otus.season.add?fields[title]=test4
-// http://localhost:8080/v1/otus.season.list
-// http://localhost:8080/v1/otus.season.update?id=3&fields[title]=123
-// http://localhost:8080/v1/otus.season.delete?id=3
-
 func Init(router *gin.Engine) {
 
 	v1 := router.Group("/v1")
