@@ -41,6 +41,38 @@
 			"response": []
 		},
 		{
+			"name": "List data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/otus.season.list",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"otus.season.list"
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
 			"name": "Add data",
 			"event": [
 				{
@@ -74,19 +106,13 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "fields[title]",
-							"value": "123",
-							"type": "text"
-						},
-						{
-							"key": "fields[sort]",
-							"value": "100",
-							"type": "text"
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"567\",\n    \"sort\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
 				"url": {
 					"raw": "{{base_url}}/otus.season.add",
@@ -119,9 +145,7 @@
 				}
 			],
 			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
+				"disabledSystemHeaders": {}
 			},
 			"request": {
 				"method": "PUT",
@@ -129,27 +153,27 @@
 					{
 						"key": "Content-Type",
 						"value": "application/x-www-form-urlencoded",
-						"type": "text"
+						"type": "text",
+						"disabled": true
 					}
 				],
 				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "fields[title]",
-							"value": "567",
-							"type": "text"
+					"mode": "raw",
+					"raw": "{\n  \"description\": \"TV series\",\n  \"duration\": 40,\n  \"production_period\": \"2008-2013\",\n  \"quality\": \"High\",\n  \"rating\": 9.5,\n  \"sort\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
 				"url": {
-					"raw": "{{base_url}}/otus.season.update/2",
+					"raw": "{{base_url}}/otus.serial.update/1",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
-						"otus.season.update",
-						"2"
+						"otus.serial.update",
+						"1"
 					]
 				},
 				"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
