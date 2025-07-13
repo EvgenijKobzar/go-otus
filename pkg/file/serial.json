@@ -6,7 +6,18 @@
     "description": "TV series",
     "rating": 9.5,
     "duration": 40,
-    "sort": 1000,
+    "sort": 1,
+    "production_period": "2008-2013",
+    "quality": "High"
+  },
+  {
+    "id": 2,
+    "title": "Breaking Bad",
+    "file_id": 0,
+    "description": "TV series",
+    "rating": 9.5,
+    "duration": 40,
+    "sort": 1,
     "production_period": "2008-2013",
     "quality": "High"
   }

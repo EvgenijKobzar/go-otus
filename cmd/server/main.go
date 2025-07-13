@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	"log"
 	"otus/internal/route"
 )
 
@@ -21,4 +23,10 @@ func main() {
 	route.Init(r)
 
 	r.Run(":8080")
+}
+
+func init() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file")
+	}
 }

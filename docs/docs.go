@@ -17,6 +17,164 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/otus.account.delete/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete a account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Delete account",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Account ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.DeleteResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/otus.account.get/{id}": {
+            "get": {
+                "description": "Get detailed information about a account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Get account by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Account ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved account",
+                        "schema": {
+                            "$ref": "#/definitions/handler.AccountItemResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/otus.account.list": {
+            "get": {
+                "description": "Get list information about account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Get accounts",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved account",
+                        "schema": {
+                            "$ref": "#/definitions/handler.AccountItemsResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/otus.account.login": {
+            "post": {
+                "description": "Get token by UserName",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Get token by UserName",
+                "parameters": [
+                    {
+                        "description": "Account data",
+                        "name": "account",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.AccountLoginRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/otus.account.register": {
+            "post": {
+                "description": "Add a new account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Register new account",
+                "parameters": [
+                    {
+                        "description": "Account data",
+                        "name": "account",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.AccountRegisterRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/otus.episode.add": {
             "post": {
                 "security": [
@@ -724,6 +882,73 @@ const docTemplate = `{
                 }
             }
         },
+        "handler.AccountItemResponse": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "type": "object",
+                    "properties": {
+                        "item": {
+                            "$ref": "#/definitions/model.Account"
+                        }
+                    }
+                }
+            }
+        },
+        "handler.AccountItemsResponse": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "type": "object",
+                    "properties": {
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Account"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "handler.AccountLoginRequest": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string",
+                    "example": "ekobzar"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123456"
+                }
+            }
+        },
+        "handler.AccountRegisterRequest": {
+            "type": "object",
+            "properties": {
+                "first_name": {
+                    "type": "string",
+                    "example": "Kobzar"
+                },
+                "last_name": {
+                    "type": "string",
+                    "example": ""
+                },
+                "login": {
+                    "type": "string",
+                    "example": "ekobzar"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Evgenij"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123456"
+                }
+            }
+        },
         "handler.DeleteResponse": {
             "type": "object",
             "properties": {
@@ -830,6 +1055,38 @@ const docTemplate = `{
                             }
                         }
                     }
+                }
+            }
+        },
+        "model.Account": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string",
+                    "example": "Kobzar"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "last_name": {
+                    "type": "string",
+                    "example": ""
+                },
+                "login": {
+                    "type": "string",
+                    "example": "ekobzar"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Evgenij"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123456"
                 }
             }
         }

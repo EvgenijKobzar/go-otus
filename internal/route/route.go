@@ -19,7 +19,7 @@ func Init(router *gin.Engine) {
 	v1.Use(func(c *gin.Context) { middleware.Process(c) })
 	{
 		v1.GET("/otus.serial.get/:id", handler.GetSerial)
-		v1.POST("/otus.serial.add", handler.AddSerial)
+		v1.POST("/otus.serial.add", middleware.Auth, handler.AddSerial)
 		v1.GET("/otus.serial.list", handler.GetListSerial)
 		v1.PUT("/otus.serial.update/:id", handler.UpdateSerial)
 		v1.DELETE("/otus.serial.delete/:id", handler.DeleteSerial)
@@ -35,5 +35,11 @@ func Init(router *gin.Engine) {
 		v1.GET("/otus.episode.list", handler.GetListEpisode)
 		v1.PUT("/otus.episode.update/:id", handler.UpdateEpisode)
 		v1.DELETE("/otus.episode.delete/:id", handler.DeleteEpisode)
+
+		v1.GET("/otus.account.get/:id", handler.GetAccount)
+		v1.GET("/otus.account.list", handler.GetListAccount)
+		v1.DELETE("/otus.account.delete/:id", handler.DeleteAccount)
+		v1.POST("/otus.account.register", handler.RegisterAccount)
+		v1.POST("/otus.account.login/", handler.LoginAccount)
 	}
 }

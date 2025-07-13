@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"os"
+	"otus/internal/model"
 	"otus/internal/model/catalog"
 )
 
@@ -11,6 +12,7 @@ type FilePathConfig struct {
 	Serial  string `json:"serial"`
 	Season  string `json:"season"`
 	Episode string `json:"episode"`
+	Account string `json:"account"`
 }
 
 type Config struct {
@@ -46,6 +48,8 @@ func ResolvePathByEntityType[T catalog.HasId](entity T) (string, error) {
 		path = configApp.FilePath.Season
 	case *catalog.Episode:
 		path = configApp.FilePath.Episode
+	case *model.Account:
+		path = configApp.FilePath.Account
 	default:
 		return "", errors.New("invalid entity type")
 	}

@@ -12,6 +12,8 @@ const ActionAdd = "add"
 const ActionList = "list"
 const ActionUpdate = "update"
 const ActionDelete = "delete"
+const ActionRegister = "register"
+const ActionLogin = "login"
 
 func GetActonByFullPath(handlerName string) string {
 
@@ -78,6 +80,8 @@ func Internalize(c *gin.Context) (error, bool) {
 		err = internalizeUpdate(c)
 	case ActionDelete:
 		err = internalizeDelete(c)
+	case ActionRegister, ActionLogin:
+		err = nil
 	default:
 		err = errors.New("invalid action")
 	}
