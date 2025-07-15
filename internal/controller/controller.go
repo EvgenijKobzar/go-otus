@@ -89,10 +89,10 @@ func updateInner[T catalog.HasId](id int, c *gin.Context) (T, error) {
 
 	if err == nil {
 		bindings := new(T)
-
-		if err = c.ShouldBind(bindings); err == nil {
-			allowedFields := c.PostFormMap("fields")
-			if err = entityAssign[T](entity, *bindings, allowedFields); err == nil {
+		var inputFields map[string]any
+		if err = c.ShouldBindJSON(&inputFields); err == nil {
+			mapstructure.MapToStruct(inputFields, bindings)
+			if err = entityAssign[T](entity, *bindings, inputFields); err == nil {
 				err = repo.Save(entity)
 			}
 		}
@@ -100,7 +100,7 @@ func updateInner[T catalog.HasId](id int, c *gin.Context) (T, error) {
 	return entity, err
 }
 
-func entityAssign[T catalog.HasId](entity T, bindings T, allowedFields map[string]string) error {
+func entityAssign[T catalog.HasId](entity T, bindings T, allowedFields map[string]any) error {
 	var err error
 	var srcMap map[string]any
 	var distMap map[string]any
@@ -114,7 +114,7 @@ func entityAssign[T catalog.HasId](entity T, bindings T, allowedFields map[strin
 	return err
 }
 
-func assign(src map[string]any, dist map[string]any, allowed map[string]string) map[string]any {
+func assign(src map[string]any, dist map[string]any, allowed map[string]any) map[string]any {
 	result := make(map[string]any)
 	for name, oldValue := range src {
 		if _, isAllow := allowed[name]; isAllow {

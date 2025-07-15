@@ -12,6 +12,8 @@ const ActionAdd = "add"
 const ActionList = "list"
 const ActionUpdate = "update"
 const ActionDelete = "delete"
+const ActionRegister = "register"
+const ActionLogin = "login"
 
 func GetActonByFullPath(handlerName string) string {
 
@@ -33,21 +35,19 @@ func internalizeGet(c *gin.Context) error {
 	return nil
 }
 func internalizeAdd(c *gin.Context) error {
-	fields := c.PostFormMap("fields")
-	if len(fields) == 0 {
-		return errors.New("fields is required")
+	var err error
+	if err = payloadIsEmpty(c); err != nil {
+		return err
 	}
 	return nil
 }
 func internalizeUpdate(c *gin.Context) error {
-	err := internalizeGet(c)
-	if err != nil {
+	var err error
+	if err = internalizeGet(c); err != nil {
 		return err
 	}
-
-	fields := c.PostFormMap("fields")
-	if len(fields) == 0 {
-		return errors.New("fields is required")
+	if err = payloadIsEmpty(c); err != nil {
+		return err
 	}
 	return nil
 }
@@ -58,7 +58,14 @@ func internalizeList(c *gin.Context) error {
 func internalizeDelete(c *gin.Context) error {
 	return internalizeGet(c)
 }
+func payloadIsEmpty(c *gin.Context) error {
+	req := c.Request
+	if req == nil || req.ContentLength == 0 {
+		return errors.New("fields is not specified")
+	}
 
+	return nil
+}
 func Internalize(c *gin.Context) (error, bool) {
 	var err error
 	action := GetActonByFullPath(c.FullPath())
@@ -73,6 +80,8 @@ func Internalize(c *gin.Context) (error, bool) {
 		err = internalizeUpdate(c)
 	case ActionDelete:
 		err = internalizeDelete(c)
+	case ActionRegister, ActionLogin:
+		err = nil
 	default:
 		err = errors.New("invalid action")
 	}

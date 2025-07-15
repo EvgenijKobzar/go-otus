@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "Evgenij",
+    "first_name": "Kobzar",
+    "last_name": "",
+    "login": "ekobzar",
+    "password": "$2a$10$kpoHbGnSvXcy2172rv0KHu0A/tklRXjhrboLgocdd3JbSIfscp206",
+    "created_at": "0001-01-01T00:00:00Z"
+  },
+  {
+    "id": 2,
+    "name": "Evgenij",
+    "first_name": "Kobzar",
+    "last_name": "",
+    "login": "ekobzar",
+    "password": "$2a$10$i0lW8X.qYCW0/VRMspMAl.6WLG/RSmB8jatu5iG8PEuY28Bm/jS8.",
+    "created_at": "0001-01-01T00:00:00Z"
+  }
+]
