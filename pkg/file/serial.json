@@ -1,5 +1,60 @@
 [
   {
+    "id": 2,
+    "title": "Breaking Bad",
+    "file_id": 0,
+    "description": "TV series",
+    "rating": 9.5,
+    "duration": 40,
+    "sort": 1,
+    "production_period": "2008-2013",
+    "quality": "High"
+  },
+  {
+    "id": 5,
+    "title": "Breaking Bad",
+    "file_id": 12345,
+    "description": "",
+    "rating": 9.5,
+    "duration": 45,
+    "sort": 1,
+    "production_period": "2008-2013",
+    "quality": "HD"
+  },
+  {
+    "id": 6,
+    "title": "Breaking Bad",
+    "file_id": 12345,
+    "description": "",
+    "rating": 9.7,
+    "duration": 45,
+    "sort": 1,
+    "production_period": "2008-2013",
+    "quality": "HD"
+  },
+  {
+    "id": 4,
+    "title": "Breaking Bad",
+    "file_id": 12345,
+    "description": "",
+    "rating": 9.5,
+    "duration": 45,
+    "sort": 1,
+    "production_period": "2008-2013",
+    "quality": "HD"
+  },
+  {
+    "id": 3,
+    "title": "Breaking Bad",
+    "file_id": 12345,
+    "description": "",
+    "rating": 9.5,
+    "duration": 45,
+    "sort": 1,
+    "production_period": "2008-2013",
+    "quality": "HD"
+  },
+  {
     "id": 1,
     "title": "Breaking Bad",
     "file_id": 0,
@@ -11,14 +66,14 @@
     "quality": "High"
   },
   {
-    "id": 2,
+    "id": 7,
     "title": "Breaking Bad",
-    "file_id": 0,
-    "description": "TV series",
-    "rating": 9.5,
-    "duration": 40,
+    "file_id": 12345,
+    "description": "",
+    "rating": 9.7,
+    "duration": 45,
     "sort": 1,
     "production_period": "2008-2013",
-    "quality": "High"
+    "quality": "HD"
   }
 ]

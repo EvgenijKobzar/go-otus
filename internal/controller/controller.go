@@ -2,10 +2,10 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"otus/internal/lib/mapstructure"
 	"otus/internal/middleware"
 	"otus/internal/model/catalog"
 	f "otus/internal/repository/file"
+	"otus/pkg/lib/mapstructure"
 	"strconv"
 )
 

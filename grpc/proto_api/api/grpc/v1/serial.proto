@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package serial;
+
+option go_package = "pkg/grpc/v1/serial_api"; // Замените на ваш пакет
+
+import "google/protobuf/empty.proto";
+
+message Serial {
+  int64 id = 1;
+  string title = 2;
+  int64 file_id = 3;
+  string description = 4;
+  double rating = 5;
+  double duration = 6;
+  int32 sort = 7;
+  string production_period = 8;
+  string quality = 9;
+}
+
+message CreateSerialRequest {
+  string title = 1;
+  int64 file_id = 2;
+  string description = 3;
+  double rating = 4;
+  double duration = 5;
+  int32 sort = 6;
+  string production_period = 7;
+  string quality = 8;
+}
+
+message SerialRequest {
+  int64 id = 1;
+}
+
+message SerialList {
+  repeated serial.Serial serials = 1;
+}
+
+service SerialService {
+  // Создание сериала (Unary)
+  rpc CreateSerial(CreateSerialRequest) returns (Serial) {}
+
+  // Получение сериала по ID (Unary)
+  rpc GetSerial(SerialRequest) returns (Serial) {}
+
+  // Обновление сериала (Unary)
+  rpc UpdateSerial(Serial) returns (Serial) {}
+
+  // Удаление сериала (Unary)
+  rpc DeleteSerial(SerialRequest) returns (google.protobuf.Empty) {}
+
+  // Получение всех сериалов (Unary)
+  rpc GetAllSerials(google.protobuf.Empty) returns (SerialList) {}
+}
