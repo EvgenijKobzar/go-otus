@@ -14,14 +14,11 @@ import (
 
 // gRPC сервер
 type serialServer struct {
-	//repo *f.Repository[*catalog.Serial]
 	serialpb.UnimplementedSerialServiceServer
 }
 
 func newSerialServer() *serialServer {
-	return &serialServer{
-		//repo: f.NewRepository[*catalog.Serial](),
-	}
+	return &serialServer{}
 }
 
 func (s *serialServer) CreateSerial(ctx context.Context, req *serialpb.CreateSerialRequest) (*serialpb.Serial, error) {
@@ -46,7 +43,6 @@ func (s *serialServer) CreateSerial(ctx context.Context, req *serialpb.CreateSer
 
 	return serial, nil
 }
-
 func (s *serialServer) GetSerial(ctx context.Context, req *serialpb.SerialRequest) (*serialpb.Serial, error) {
 	entity, err := lib.Get(int(req.GetId()))
 	if err != nil {
@@ -59,7 +55,6 @@ func (s *serialServer) GetSerial(ctx context.Context, req *serialpb.SerialReques
 
 	return &serial, nil
 }
-
 func (s *serialServer) UpdateSerial(ctx context.Context, req *serialpb.Serial) (*serialpb.Serial, error) {
 
 	serial := &serialpb.Serial{}
@@ -73,7 +68,6 @@ func (s *serialServer) UpdateSerial(ctx context.Context, req *serialpb.Serial) (
 
 	return serial, nil
 }
-
 func (s *serialServer) DeleteSerial(ctx context.Context, req *serialpb.SerialRequest) (*emptypb.Empty, error) {
 	err := lib.Delete(int(req.GetId()))
 	if err != nil {
