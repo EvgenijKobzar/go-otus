@@ -1,5 +1,5 @@
+// protoc --go_out=. --go-grpc_out=. api/grpc/v1/serial.proto
 syntax = "proto3";
-
 package serial;
 
 option go_package = "pkg/grpc/v1/serial_api"; // Замените на ваш пакет
