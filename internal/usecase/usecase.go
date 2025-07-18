@@ -5,6 +5,8 @@ import (
 	"otus/internal/repository"
 )
 
+//go:generate mockgen -source=usecase.go -destination=mock/usecase.go -package=mocks
+
 func NewUsecase[T catalog.HasId](repo repository.IRepository[T]) *Usecase[T] {
 	return &Usecase[T]{
 		repo: repo,

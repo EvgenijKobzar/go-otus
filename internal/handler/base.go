@@ -1,5 +1,13 @@
 package handler
 
+import (
+	"github.com/gin-gonic/gin"
+	"otus/internal/middleware"
+	"otus/internal/model/catalog"
+	"otus/internal/usecase/service"
+	"strconv"
+)
+
 type DeleteResponse struct {
 	Result struct {
 		Deleted bool
@@ -8,4 +16,75 @@ type DeleteResponse struct {
 
 type ErrorResponse struct {
 	Error string `json:"error" example:"entity not found"`
+}
+
+const Item = "item"
+const Items = "items"
+
+type Handler[T catalog.HasId] struct {
+	service *service.Service[T]
+}
+
+func New[T catalog.HasId](service *service.Service[T]) *Handler[T] {
+	return &Handler[T]{service: service}
+}
+
+// Action region
+func (h *Handler[T]) getAction(c *gin.Context) {
+	var entity T
+	id, err := strconv.Atoi(c.Param("id"))
+	if err == nil {
+		entity, err = h.service.GetInner(id)
+	}
+	setResponse(gin.H{Item: entity}, err, c)
+}
+
+func (h *Handler[T]) addAction(c *gin.Context) {
+	var entity *T
+	bindings := new(T)
+
+	err := c.ShouldBind(bindings)
+
+	if err == nil {
+		entity, err = h.service.AddInner(bindings)
+	}
+	setResponse(gin.H{Item: entity}, err, c)
+}
+
+func (h *Handler[T]) updateAction(c *gin.Context) {
+	var entity T
+	id, err := strconv.Atoi(c.Param("id"))
+	if err == nil {
+		entity, err = h.service.UpdateInner(id, c)
+	}
+	setResponse(gin.H{Item: entity}, err, c)
+}
+
+func (h *Handler[T]) deleteAction(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err == nil {
+		err = h.service.DeleteInner(id)
+	}
+	setResponse(gin.H{"deleted": true}, err, c)
+}
+
+func (h *Handler[T]) getListAction(c *gin.Context) {
+	var err error
+	var result gin.H
+
+	items, _ := h.service.GetListInner()
+
+	result = gin.H{Items: items}
+
+	setResponse(result, err, c)
+}
+
+// end region
+
+func setResponse(result gin.H, err error, c *gin.Context) {
+	if err == nil {
+		c.Set(middleware.KeyResponse, result)
+	} else {
+		c.Set(middleware.KeyError, err)
+	}
 }
