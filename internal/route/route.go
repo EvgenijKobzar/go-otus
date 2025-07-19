@@ -5,12 +5,12 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	_ "otus/docs"
+	"otus/internal/core"
 	"otus/internal/handler"
 	"otus/internal/middleware"
 	"otus/internal/model"
 	"otus/internal/model/catalog"
 	"otus/internal/repository/file"
-	uc "otus/internal/usecase/service"
 )
 
 func Init(router *gin.Engine) {
@@ -50,6 +50,6 @@ func Init(router *gin.Engine) {
 
 func getHandler[T catalog.HasId]() *handler.Handler[T] {
 	repo := file.NewRepository[T]()
-	service := uc.New(repo)
+	service := core.New(repo)
 	return handler.New(service)
 }

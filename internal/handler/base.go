@@ -2,9 +2,9 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"otus/internal/core"
 	"otus/internal/middleware"
 	"otus/internal/model/catalog"
-	"otus/internal/usecase/service"
 	"strconv"
 )
 
@@ -22,10 +22,10 @@ const Item = "item"
 const Items = "items"
 
 type Handler[T catalog.HasId] struct {
-	service *service.Service[T]
+	service *core.Service[T]
 }
 
-func New[T catalog.HasId](service *service.Service[T]) *Handler[T] {
+func New[T catalog.HasId](service *core.Service[T]) *Handler[T] {
 	return &Handler[T]{service: service}
 }
 
@@ -55,7 +55,10 @@ func (h *Handler[T]) updateAction(c *gin.Context) {
 	var entity T
 	id, err := strconv.Atoi(c.Param("id"))
 	if err == nil {
-		entity, err = h.service.UpdateInner(id, c)
+		var inputFields map[string]any
+		if err = c.ShouldBindJSON(&inputFields); err == nil {
+			entity, err = h.service.UpdateInner(id, inputFields)
+		}
 	}
 	setResponse(gin.H{Item: entity}, err, c)
 }
