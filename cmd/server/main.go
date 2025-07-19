@@ -17,6 +17,7 @@ import (
 // @in header
 // @name Authorization
 func main() {
+
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 

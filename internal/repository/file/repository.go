@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"maps"
 	"os"
 	"otus/internal/config"
 	"otus/internal/model/catalog"
+	"slices"
 )
 
 func NewRepository[T catalog.HasId]() *Repository[T] {
@@ -25,7 +27,7 @@ func (r *Repository[T]) Save(entity T) error {
 	}
 	r.items[entity.GetId()] = entity
 
-	go r.saveToFile(entity)
+	r.saveToFile(entity)
 
 	return nil
 }
@@ -34,7 +36,7 @@ func (r *Repository[T]) Delete(id int) error {
 	delete(r.items, id)
 
 	var entity T
-	go r.saveToFile(entity)
+	r.saveToFile(entity)
 	return nil
 }
 
@@ -49,11 +51,8 @@ func (r *Repository[T]) Load(id int) (*T, error) {
 func (r *Repository[T]) GetAll() ([]T, error) {
 	r.imx.RLock()
 	defer r.imx.RUnlock()
-	var items []T
-	for _, entity := range r.items {
-		items = append(items, entity)
-	}
-	return items, nil
+
+	return slices.Collect(maps.Values(r.items)), nil
 }
 
 func (r *Repository[T]) GetById(id int) (T, error) {
@@ -105,7 +104,7 @@ func (r *Repository[T]) loadFromFile() ([]T, error) {
 func (r *Repository[T]) saveToFile(entity T) error {
 	path, _ := config.ResolvePathByEntityType(entity)
 
-	items, _ := r.GetAll()
+	items := slices.Collect(maps.Values(r.items))
 	jsonData, err := json.MarshalIndent(items, "", "  ")
 	if err != nil {
 		fmt.Printf("Ошибка кодирования JSON: %v\n", err)

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"otus/internal/controller"
 	"otus/internal/model/catalog"
 )
 
@@ -27,8 +26,8 @@ type EpisodeItemsResponse struct {
 // @Success 200 {object} EpisodeItemResponse "Successfully retrieved episode"
 // @Failure 400 {object} ErrorResponse "Not found"
 // @Router /otus.episode.get/{id} [get]
-func GetEpisode(c *gin.Context) {
-	controller.GetAction[*catalog.Episode](c)
+func (h *Handler[T]) GetEpisode(c *gin.Context) {
+	h.getAction(c)
 }
 
 // GetListEpisode godoc
@@ -39,8 +38,8 @@ func GetEpisode(c *gin.Context) {
 // @Produce  json
 // @Success 200 {object} EpisodeItemsResponse "Successfully retrieved episode"
 // @Router /otus.episode.list [get]
-func GetListEpisode(c *gin.Context) {
-	controller.GetListAction[*catalog.Episode](c)
+func (h *Handler[T]) GetListEpisode(c *gin.Context) {
+	h.getListAction(c)
 }
 
 // AddEpisode godoc
@@ -53,8 +52,8 @@ func GetListEpisode(c *gin.Context) {
 // @Success 200 {object} EpisodeItemResponse
 // @Security ApiKeyAuth
 // @Router /otus.episode.add [post]
-func AddEpisode(c *gin.Context) {
-	controller.AddAction[*catalog.Episode](c)
+func (h *Handler[T]) AddEpisode(c *gin.Context) {
+	h.addAction(c)
 }
 
 // UpdateEpisode godoc
@@ -69,8 +68,8 @@ func AddEpisode(c *gin.Context) {
 // @Failure 400 {object} ErrorResponse "Not found"
 // @Security ApiKeyAuth
 // @Router /otus.episode.update/{id} [put]
-func UpdateEpisode(c *gin.Context) {
-	controller.UpdateAction[*catalog.Episode](c)
+func (h *Handler[T]) UpdateEpisode(c *gin.Context) {
+	h.updateAction(c)
 }
 
 // DeleteEpisode godoc
@@ -84,6 +83,6 @@ func UpdateEpisode(c *gin.Context) {
 // @Failure 400 {object} ErrorResponse "Not found"
 // @Security ApiKeyAuth
 // @Router /otus.episode.delete/{id} [delete]
-func DeleteEpisode(c *gin.Context) {
-	controller.DeleteAction[*catalog.Episode](c)
+func (h *Handler[T]) DeleteEpisode(c *gin.Context) {
+	h.deleteAction(c)
 }

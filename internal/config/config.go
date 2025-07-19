@@ -38,7 +38,8 @@ func LoadConfig(path string) (*Config, error) {
 
 func ResolvePathByEntityType[T catalog.HasId](entity T) (string, error) {
 
-	configApp, _ := LoadConfig("config.json")
+	//configApp, _ := LoadConfig("config.json")
+	configApp, _ := LoadConfig("../../config_test.json")
 
 	var path string
 	switch any(entity).(type) {

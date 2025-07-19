@@ -1,0 +1,8 @@
+{
+  "filepath": {
+    "serial": "../../pkg/file/serial.json",
+    "season": "../../pkg/file/season.json",
+    "episode": "../../pkg/file/episode.json",
+    "account": "../../pkg/file/account.json"
+  }
+}

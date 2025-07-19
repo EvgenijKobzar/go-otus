@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/signal"
 	c "otus/internal/model/catalog"
+	"otus/internal/repository"
 	f "otus/internal/repository/file"
 	us "otus/internal/usecase"
 	"slices"
@@ -44,7 +45,7 @@ func startLogger(done <-chan bool, ticker *time.Ticker, repoEpisode *f.Repositor
 	}
 }
 
-func createEpisode(ch chan<- *c.Episode, titles [8]string, repoEpisode *f.Repository[*c.Episode]) {
+func createEpisode(ch chan<- *c.Episode, titles [8]string, repoEpisode repository.IRepository[*c.Episode]) {
 	wg := sync.WaitGroup{}
 	wg.Add(len(titles))
 	for _, title := range titles {
@@ -82,14 +83,14 @@ func createSeason(ch <-chan *c.Episode, chSeason chan<- *c.Season) {
 	chSeason <- season
 }
 
-func createSerial(season *c.Season, title string, repo *f.Repository[*c.Serial]) (*c.Serial, error) {
+func createSerial(season *c.Season, title string, repo repository.IRepository[*c.Serial]) (*c.Serial, error) {
 	serial, err := us.NewUsecase(repo).Create(us.SerialCreateParams{
 		Title: title,
 	}, c.WithSeason(season))
 	return serial, err
 }
 
-func generateSerial(ctx context.Context, repo *f.Repository[*c.Serial], wg *sync.WaitGroup) {
+func generateSerial(ctx context.Context, repo repository.IRepository[*c.Serial], wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	for {

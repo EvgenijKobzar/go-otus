@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"os"
-	"otus/internal/controller"
 	"otus/internal/lib/hash"
 	"otus/internal/lib/jwt"
 	"otus/internal/model"
@@ -43,8 +42,8 @@ type AccountItemsResponse struct {
 // @Success 200 {object} AccountItemResponse "Successfully retrieved account"
 // @Failure 400 {object} ErrorResponse "Not found"
 // @Router /otus.account.get/{id} [get]
-func GetAccount(c *gin.Context) {
-	controller.GetAction[*model.Account](c)
+func (h *Handler[T]) GetAccount(c *gin.Context) {
+	h.getAction(c)
 }
 
 // GetListAccount godoc
@@ -55,8 +54,8 @@ func GetAccount(c *gin.Context) {
 // @Produce  json
 // @Success 200 {object} AccountItemsResponse "Successfully retrieved account"
 // @Router /otus.account.list [get]
-func GetListAccount(c *gin.Context) {
-	controller.GetListAction[*model.Account](c)
+func (h *Handler[T]) GetListAccount(c *gin.Context) {
+	h.getListAction(c)
 }
 
 // RegisterAccount godoc
@@ -101,8 +100,8 @@ func RegisterAccount(c *gin.Context) {
 // @Failure 400 {object} ErrorResponse "Not found"
 // @Security ApiKeyAuth
 // @Router /otus.account.delete/{id} [delete]
-func DeleteAccount(c *gin.Context) {
-	controller.DeleteAction[*model.Account](c)
+func (h *Handler[T]) DeleteAccount(c *gin.Context) {
+	h.deleteAction(c)
 }
 
 // LoginAccount godoc
