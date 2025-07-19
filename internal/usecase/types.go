@@ -2,11 +2,11 @@ package usecase
 
 import (
 	"otus/internal/model/catalog"
-	"otus/internal/repository/file"
+	"otus/internal/repository"
 )
 
 type Usecase[T catalog.HasId] struct {
-	repo *file.Repository[T]
+	repo repository.IRepository[T]
 }
 
 type SerialCreateParams struct {

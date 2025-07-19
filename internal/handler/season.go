@@ -2,7 +2,6 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"otus/internal/controller"
 	"otus/internal/model/catalog"
 )
 
@@ -27,8 +26,8 @@ type SeasonItemsResponse struct {
 // @Success 200 {object} SeasonItemResponse "Successfully retrieved season"
 // @Failure 400 {object} ErrorResponse "Not found"
 // @Router /otus.season.get/{id} [get]
-func GetSeason(c *gin.Context) {
-	controller.GetAction[*catalog.Season](c)
+func (h *Handler[T]) GetSeason(c *gin.Context) {
+	h.getAction(c)
 }
 
 // GetListSeason godoc
@@ -39,8 +38,8 @@ func GetSeason(c *gin.Context) {
 // @Produce  json
 // @Success 200 {object} SeasonItemsResponse "Successfully retrieved season"
 // @Router /otus.season.list [get]
-func GetListSeason(c *gin.Context) {
-	controller.GetListAction[*catalog.Season](c)
+func (h *Handler[T]) GetListSeason(c *gin.Context) {
+	h.getListAction(c)
 }
 
 // AddSeason godoc
@@ -53,8 +52,8 @@ func GetListSeason(c *gin.Context) {
 // @Success 200 {object} SeasonItemResponse
 // @Security ApiKeyAuth
 // @Router /otus.season.add [post]
-func AddSeason(c *gin.Context) {
-	controller.AddAction[*catalog.Season](c)
+func (h *Handler[T]) AddSeason(c *gin.Context) {
+	h.addAction(c)
 }
 
 // UpdateSeason godoc
@@ -69,8 +68,8 @@ func AddSeason(c *gin.Context) {
 // @Failure 400 {object} ErrorResponse "Not found"
 // @Security ApiKeyAuth
 // @Router /otus.season.update/{id} [put]
-func UpdateSeason(c *gin.Context) {
-	controller.UpdateAction[*catalog.Season](c)
+func (h *Handler[T]) UpdateSeason(c *gin.Context) {
+	h.updateAction(c)
 }
 
 // DeleteSeason godoc
@@ -84,6 +83,6 @@ func UpdateSeason(c *gin.Context) {
 // @Failure 400 {object} ErrorResponse "Not found"
 // @Security ApiKeyAuth
 // @Router /otus.season.delete/{id} [delete]
-func DeleteSeason(c *gin.Context) {
-	controller.DeleteAction[*catalog.Season](c)
+func (h *Handler[T]) DeleteSeason(c *gin.Context) {
+	h.deleteAction(c)
 }

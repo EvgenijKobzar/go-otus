@@ -2,7 +2,6 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"otus/internal/controller"
 	"otus/internal/model/catalog"
 )
 
@@ -27,8 +26,8 @@ type SerialItemsResponse struct {
 // @Success 200 {object} SerialItemResponse "Successfully retrieved serial"
 // @Failure 400 {object} ErrorResponse "Not found"
 // @Router /otus.serial.get/{id} [get]
-func GetSerial(c *gin.Context) {
-	controller.GetAction[*catalog.Serial](c)
+func (h *Handler[T]) GetSerial(c *gin.Context) {
+	h.getAction(c)
 }
 
 // GetListSerial godoc
@@ -39,8 +38,8 @@ func GetSerial(c *gin.Context) {
 // @Produce  json
 // @Success 200 {object} SerialItemsResponse "Successfully retrieved serial"
 // @Router /otus.serial.list [get]
-func GetListSerial(c *gin.Context) {
-	controller.GetListAction[*catalog.Serial](c)
+func (h *Handler[T]) GetListSerial(c *gin.Context) {
+	h.getListAction(c)
 }
 
 // AddSerial godoc
@@ -53,8 +52,8 @@ func GetListSerial(c *gin.Context) {
 // @Success 200 {object} SerialItemResponse
 // @Security ApiKeyAuth
 // @Router /otus.serial.add [post]
-func AddSerial(c *gin.Context) {
-	controller.AddAction[*catalog.Serial](c)
+func (h *Handler[T]) AddSerial(c *gin.Context) {
+	h.addAction(c)
 }
 
 // UpdateSerial godoc
@@ -69,8 +68,8 @@ func AddSerial(c *gin.Context) {
 // @Failure 400 {object} ErrorResponse "Not found"
 // @Security ApiKeyAuth
 // @Router /otus.serial.update/{id} [put]
-func UpdateSerial(c *gin.Context) {
-	controller.UpdateAction[*catalog.Serial](c)
+func (h *Handler[T]) UpdateSerial(c *gin.Context) {
+	h.updateAction(c)
 }
 
 // DeleteSerial godoc
@@ -84,6 +83,6 @@ func UpdateSerial(c *gin.Context) {
 // @Failure 400 {object} ErrorResponse "Not found"
 // @Security ApiKeyAuth
 // @Router /otus.serial.delete/{id} [delete]
-func DeleteSerial(c *gin.Context) {
-	controller.DeleteAction[*catalog.Serial](c)
+func (h *Handler[T]) DeleteSerial(c *gin.Context) {
+	h.deleteAction(c)
 }
