@@ -117,53 +117,6 @@ func TestService_DeleteInner(t *testing.T) {
 
 func TestService_AddInner(t *testing.T) {
 	repo := file.NewRepository[*catalog.Serial]()
-	//service1 := New[*catalog.Serial](repo1)
-
-	//repo2 := file.NewRepository[*catalog.Season]()
-	//New[*catalog.Season](repo2)
-	//
-	//repo3 := file.NewRepository[*catalog.Episode]()
-	//New[*catalog.Episode](repo3)
-	//var entity catalog.Serial
-
-	//entity1_1 := &catalog.Serial{
-	//	Title:   "Breaking Bad",
-	//	Quality: "High",
-	//}
-	//entity1_2 := &catalog.Serial{
-	//	Title:   "Breaking Bad",
-	//	Quality: "High",
-	//}
-	//entity1_3 := &catalog.Serial{
-	//	Title:   "Breaking Bad",
-	//	Quality: "High",
-	//}
-
-	//service1.AddInner(&entity1_1)
-	//service1.AddInner(&entity1_2)
-	//service1.AddInner(&entity1_3)
-
-	//service1.repo.Save(&catalog.Serial{
-	//	Title:   "Breaking Bad",
-	//	Quality: "High",
-	//})
-
-	//items1, err1 := service1.GetListInner()
-	//for _, item1 := range items1 {
-	//	fmt.Printf("%v", item1)
-	//	fmt.Printf("%v", err1)
-	//}
-	//items2, err2 := service2.GetListInner()
-	//for _, item2 := range items2 {
-	//	fmt.Printf("%v", item2)
-	//	fmt.Printf("%v", err2)
-	//}
-	//items3, err3 := service3.GetListInner()
-	//for _, item3 := range items3 {
-	//	fmt.Printf("%v", item3)
-	//	fmt.Printf("%v", err3)
-	//}
-	println("---")
 
 	tests := []struct {
 		name string
@@ -216,23 +169,6 @@ func TestService_AddInner(t *testing.T) {
 			}
 		})
 	}
-
-	//for _, tt := range tests {
-	//	t.Run(tt.name, func(t *testing.T) {
-	//
-	//		New[*catalog.Serial](repo)
-
-	//got, _ := service.AddInner(&tt.args)
-	//fmt.Println(*got)
-	//if (err != nil) != tt.wantErr {
-	//	t.Errorf("AddInner() error = %v, wantErr %v", err, tt.wantErr)
-	//	return
-	//}
-	//if !reflect.DeepEqual(*got, tt.want) {
-	//	t.Errorf("AddInner() got = %v, want %v", *got, tt.want)
-	//}
-	//})
-	//}
 }
 
 func TestService_UpdateInner(t *testing.T) {
