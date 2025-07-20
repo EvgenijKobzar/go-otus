@@ -72,8 +72,8 @@ func (r *Repository[T]) update(entity T) error {
 	ctx := context.TODO()
 	filter := bson.M{"_id": entity.GetId()}
 	opts := options.FindOneAndUpdate().
-		SetReturnDocument(options.After). // Возвращаем документ ПОСЛЕ обновления
-		SetUpsert(false)                  // Не создавать новый, если не найден
+		SetReturnDocument(options.After).
+		SetUpsert(false)
 
 	update := bson.M{
 		"$set": entity,
