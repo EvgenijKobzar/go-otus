@@ -1,9 +1,11 @@
 package mongo
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
-	"fmt"
+	"github.com/go-redis/redis/v8"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -11,11 +13,28 @@ import (
 	"os"
 	"otus/internal/model"
 	"otus/internal/model/catalog"
+	"strconv"
+	"time"
 )
 
+const AddAction = "add"
+const UpdateAction = "update"
+const DeleteAction = "delete"
+
 func NewRepository[T catalog.HasId]() *Repository[T] {
+	сollection, err := getDBCollection[T]()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	client, err := getClientRedis()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return &Repository[T]{
-		сollection: getDBCollection[T](),
+		сollection:  сollection,
+		СlientRedis: client,
 	}
 }
 
@@ -41,6 +60,11 @@ func (r *Repository[T]) add(entity T) error {
 		context.TODO(),
 		bson.M{"_id": insertedID},
 	).Decode(&entity)
+
+	if err == nil {
+		err = r.addLogMessage(entity, AddAction)
+	}
+
 	return err
 }
 
@@ -61,6 +85,11 @@ func (r *Repository[T]) update(entity T) error {
 			err = errors.New("entity not found")
 		}
 	}
+
+	if err == nil {
+		err = r.addLogMessage(entity, UpdateAction)
+	}
+
 	return err
 }
 
@@ -73,6 +102,10 @@ func (r *Repository[T]) Delete(id int) error {
 		if err == mongo.ErrNoDocuments {
 			err = errors.New("entity not found")
 		}
+	}
+
+	if err == nil {
+		err = r.addLogMessage(entity, DeleteAction)
 	}
 
 	return err
@@ -146,28 +179,83 @@ func dbConnect() (*mongo.Database, error) {
 		return nil, err
 	}
 
-	// Пинг сервера для проверки соединения
 	err = client.Ping(ctx, nil)
 	if err != nil {
 		return nil, err
-
 	}
-	fmt.Println("Подключено к MongoDB!")
 
-	// Создание или переключение на базу данных
 	return client.Database(os.Getenv("MONGO_DB_NAME")), nil
 }
 
-func getDBCollection[T catalog.HasId]() *mongo.Collection {
+func getDBCollection[T catalog.HasId]() (*mongo.Collection, error) {
 	var err error
 	var db *mongo.Database
 	var collectionName string
 
 	if collectionName, err = resolveCollectionNameByEntityType[T](); err == nil {
 		if db, err = dbConnect(); err == nil {
-			return db.Collection(collectionName)
+			return db.Collection(collectionName), nil
 		}
 	}
-	log.Fatal(err)
-	return nil
+
+	return nil, err
+}
+
+func getClientRedis() (*redis.Client, error) {
+	ctx := context.Background()
+
+	db, _ := strconv.Atoi(os.Getenv("REDIS_DB_NAME"))
+	client := redis.NewClient(&redis.Options{
+		Addr:     os.Getenv("REDIS_ADDR"),
+		Password: os.Getenv("REDIS_DB_PASSWORD"),
+		DB:       db,
+	})
+
+	_, err := client.Ping(ctx).Result()
+	if err != nil {
+		return nil, err
+	}
+	return client, nil
+}
+
+func makeKey[T catalog.HasId](entity catalog.HasId, action string) (string, error) {
+	now := time.Now().String()
+	buffer := bytes.Buffer{}
+	if name, err := resolveCollectionNameByEntityType[T](); err == nil {
+		var id int
+		if entity.GetId() == 0 {
+			id = 0
+		} else {
+			id = entity.GetId()
+		}
+
+		buffer.WriteString(action)
+		buffer.WriteString(":")
+		buffer.WriteString(name)
+		buffer.WriteString(":")
+		buffer.WriteString(strconv.Itoa(id))
+		buffer.WriteString(":")
+		buffer.WriteString(now)
+
+		return buffer.String(), nil
+
+	} else {
+		return "", err
+	}
+}
+
+func (r *Repository[T]) addLogMessage(entity catalog.HasId, action string) error {
+	ctx := context.Background()
+
+	var err error
+	var key string
+	key, err = makeKey[T](entity, action)
+	if err == nil {
+
+		jsonData, err := json.Marshal(entity)
+		if err == nil {
+			err = r.СlientRedis.Set(ctx, key, jsonData, time.Second*10).Err()
+		}
+	}
+	return err
 }

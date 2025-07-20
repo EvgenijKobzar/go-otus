@@ -31,7 +31,7 @@ func Init(router *gin.Engine) {
 		v1.GET("/otus.season.get/:id", func(context *gin.Context) { getHandler[*catalog.Season]().GetSeason(context) })
 		v1.POST("/otus.season.add", middleware.Auth, func(context *gin.Context) { getHandler[*catalog.Season]().AddSeason(context) })
 		v1.GET("/otus.season.list", func(context *gin.Context) { getHandler[*catalog.Season]().GetListSeason(context) })
-		v1.PUT("/otus.season.update/:id", middleware.Auth, func(context *gin.Context) { getHandler[*catalog.Season]().GetSeason(context) })
+		v1.PUT("/otus.season.update/:id", middleware.Auth, func(context *gin.Context) { getHandler[*catalog.Season]().UpdateSeason(context) })
 		v1.DELETE("/otus.season.delete/:id", middleware.Auth, func(context *gin.Context) { getHandler[*catalog.Season]().DeleteSeason(context) })
 
 		v1.GET("/otus.episode.get/:id", func(context *gin.Context) { getHandler[*catalog.Episode]().GetEpisode(context) })
