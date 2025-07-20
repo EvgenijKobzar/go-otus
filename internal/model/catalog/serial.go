@@ -1,16 +1,16 @@
 package catalog
 
 type Serial struct {
-	Id               int     `json:"id" example:"1"`
-	Title            string  `json:"title" binding:"required" form:"fields[title]" example:"Breaking Bad"`
-	FileId           int     `json:"file_id" form:"fields[fileId]" example:"0"`
-	Description      string  `json:"description" form:"fields[description]" example:"TV series"`
-	Rating           float64 `json:"rating" form:"fields[rating]" example:"9.5"`
-	Duration         float64 `json:"duration" form:"fields[duration]" example:"40"`
-	Sort             int     `json:"sort" form:"fields[sort]" example:"1"`
-	ProductionPeriod string  `json:"production_period" form:"fields[productionPeriod]" example:"2008-2013"`
-	Quality          string  `json:"quality" form:"fields[quality]" example:"High"`
-	seasons          map[int]Season
+	Id               int            `bson:"_id" json:"id" example:"1"`
+	Title            string         `bson:"title" json:"title" binding:"required" form:"fields[title]" example:"Breaking Bad"`
+	FileId           int            `bson:"fileId" json:"file_id" form:"fields[fileId]" example:"0"`
+	Description      string         `bson:"description" json:"description" form:"fields[description]" example:"TV series"`
+	Rating           float64        `bson:"rating" json:"rating" form:"fields[rating]" example:"9.5"`
+	Duration         float64        `bson:"duration" json:"duration" form:"fields[duration]" example:"40"`
+	Sort             int            `bson:"sort" json:"sort" form:"fields[sort]" example:"1"`
+	ProductionPeriod string         `bson:"productionPeriod" json:"production_period" form:"fields[productionPeriod]" example:"2008-2013"`
+	Quality          string         `bson:"quality" json:"quality" form:"fields[quality]" example:"High"`
+	seasons          map[int]Season `bson:"-"`
 }
 
 func (s *Serial) GetId() int {
