@@ -15,8 +15,7 @@ import (
 
 func NewRepository[T catalog.HasId]() *Repository[T] {
 	return &Repository[T]{
-		items:      make(map[int]T),
-		Collection: getDBCollection[T](),
+		сollection: getDBCollection[T](),
 	}
 }
 
@@ -35,10 +34,10 @@ func (r *Repository[T]) Save(entity T) error {
 func (r *Repository[T]) add(entity T) error {
 	ctx := context.TODO()
 	entity.SetId(r.Count() + 1)
-	result, _ := r.Collection.InsertOne(ctx, entity)
+	result, _ := r.сollection.InsertOne(ctx, entity)
 	insertedID := result.InsertedID
 
-	err := r.Collection.FindOne(
+	err := r.сollection.FindOne(
 		context.TODO(),
 		bson.M{"_id": insertedID},
 	).Decode(&entity)
@@ -56,7 +55,7 @@ func (r *Repository[T]) update(entity T) error {
 		"$set": entity,
 	}
 
-	err := r.Collection.FindOneAndUpdate(ctx, filter, update, opts).Decode(&entity)
+	err := r.сollection.FindOneAndUpdate(ctx, filter, update, opts).Decode(&entity)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			err = errors.New("entity not found")
@@ -69,7 +68,7 @@ func (r *Repository[T]) Delete(id int) error {
 	ctx := context.TODO()
 	filter := bson.M{"_id": id}
 	var entity T
-	err := r.Collection.FindOneAndDelete(ctx, filter).Decode(&entity)
+	err := r.сollection.FindOneAndDelete(ctx, filter).Decode(&entity)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			err = errors.New("entity not found")
@@ -80,13 +79,10 @@ func (r *Repository[T]) Delete(id int) error {
 }
 
 func (r *Repository[T]) GetAll() ([]T, error) {
-	r.imx.RLock()
-	defer r.imx.RUnlock()
-
 	var items []T
 
 	ctx := context.TODO()
-	cursor, err := r.Collection.Find(
+	cursor, err := r.сollection.Find(
 		ctx,
 		bson.M{})
 	defer cursor.Close(ctx)
@@ -102,7 +98,7 @@ func (r *Repository[T]) GetById(id int) (T, error) {
 	var entity T
 	var err error
 
-	err = r.Collection.FindOne(
+	err = r.сollection.FindOne(
 		context.TODO(),
 		bson.M{"_id": id},
 	).Decode(&entity)
