@@ -1,13 +1,13 @@
 package catalog
 
 type Season struct {
-	Id        int    `json:"id"`
-	Title     string `json:"title" binding:"required" form:"fields[title]"`
-	SerialId  int    `json:"serial_id" form:"fields[serial_id]"`
-	Sort      int    `json:"sort" form:"fields[sort]"`
-	Moderated bool   `json:"moderated" form:"fields[moderated]"`
-	CreatedBy int    `json:"created_by" form:"fields[created_by]"`
-	episodes  map[int]Episode
+	Id        int             `bson:"_id" json:"id"`
+	Title     string          `bson:"title" json:"title" binding:"required" form:"fields[title]"`
+	SerialId  int             `bson:"serialId" json:"serial_id" form:"fields[serial_id]"`
+	Sort      int             `bson:"sort" json:"sort" form:"fields[sort]"`
+	Moderated bool            `bson:"moderated" json:"moderated" form:"fields[moderated]"`
+	CreatedBy int             `bson:"createdBy" json:"created_by" form:"fields[created_by]"`
+	episodes  map[int]Episode `bson:"-"`
 }
 
 func (s *Season) GetId() int {
