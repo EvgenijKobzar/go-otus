@@ -45,40 +45,48 @@ func (r *Repository[T]) Save(entity T) error {
 }
 
 func (r *Repository[T]) add(entity T) error {
+	var err error
+	var typeId int
 
 	m, _ := mapstructure.StructToMap(entity)
+	if typeId, err = resolveTypeIdByEntityType[T](); err == nil {
+		switch typeId {
+		case 2:
+			id, err := r.repo.AddSerial(context.Background(), AddSerialParams{
+				Sort: sql.NullInt32{
+					Int32: int32(m["sort"].(float64)),
+					Valid: true,
+				},
+				Title: sql.NullString{
+					String: m["title"].(string),
+					Valid:  true,
+				},
+				ProductionPeriod: sql.NullString{
+					String: m["production_period"].(string),
+					Valid:  true,
+				},
+				Rating: sql.NullFloat64{
+					Float64: m["rating"].(float64),
+					Valid:   true,
+				},
+				Quality: sql.NullString{
+					String: m["quality"].(string),
+					Valid:  true,
+				},
+				Duration: sql.NullFloat64{
+					Float64: m["duration"].(float64),
+					Valid:   true,
+				},
+			})
 
-	id, err := r.repo.AddSerial(context.Background(), AddSerialParams{
-		Sort: sql.NullInt32{
-			Int32: int32(m["sort"].(float64)),
-			Valid: true,
-		},
-		Title: sql.NullString{
-			String: m["title"].(string),
-			Valid:  true,
-		},
-		ProductionPeriod: sql.NullString{
-			String: m["production_period"].(string),
-			Valid:  true,
-		},
-		Rating: sql.NullFloat64{
-			Float64: m["rating"].(float64),
-			Valid:   true,
-		},
-		Quality: sql.NullString{
-			String: m["quality"].(string),
-			Valid:  true,
-		},
-		Duration: sql.NullFloat64{
-			Float64: m["duration"].(float64),
-			Valid:   true,
-		},
-	})
-
-	if err == nil {
-		item, _ := r.GetById(int(id))
-		m, _ := mapstructure.StructToMap(item)
-		mapstructure.MapToStruct(m, &entity)
+			if err == nil {
+				item, _ := r.GetById(int(id))
+				m, _ := mapstructure.StructToMap(item)
+				mapstructure.MapToStruct(m, &entity)
+			}
+		case 1, 3, 4:
+			// TODO
+		}
 	}
 
 	return err
@@ -129,7 +137,6 @@ func (r *Repository[T]) update(entity T) error {
 				// TODO
 			}
 		}
-
 	}
 
 	return err
@@ -153,28 +160,21 @@ func (r *Repository[T]) Delete(id int) error {
 
 	return err
 }
+
 func (r *Repository[T]) GetAll() ([]T, error) {
 	var err error
-	var typeId int
 	var items []T
 
-	if typeId, err = resolveTypeIdByEntityType[T](); err == nil {
-		switch typeId {
-		case 2:
-			var rows []MoviesOnlineSerial
-			rows, err = r.repo.GetAllSerial(context.Background())
-			if err == nil {
-				for _, item := range rows {
-					entity := new(T)
+	var rows []MoviesOnlineSerial
+	rows, err = r.repo.GetAllSerial(context.Background())
+	if err == nil {
+		for _, item := range rows {
+			entity := new(T)
 
-					m := structToMap(item)
-					mapstructure.MapToStruct(m, &entity)
+			m := structToMap(item)
+			mapstructure.MapToStruct(m, &entity)
 
-					items = append(items, *entity)
-				}
-			}
-		case 1, 3, 4:
-			// TODO
+			items = append(items, *entity)
 		}
 	}
 
@@ -184,20 +184,12 @@ func (r *Repository[T]) GetAll() ([]T, error) {
 func (r *Repository[T]) GetById(id int) (T, error) {
 	var entity T
 	var err error
-	var typeId int
 
-	if typeId, err = resolveTypeIdByEntityType[T](); err == nil {
-		switch typeId {
-		case 2:
-			var i MoviesOnlineSerial
-			i, err = r.repo.GetByIdSerial(context.Background(), int32(id))
-			if err == nil {
-				result := structToMap(i)
-				mapstructure.MapToStruct(result, &entity)
-			}
-		case 1, 3, 4:
-			// TODO
-		}
+	var i MoviesOnlineSerial
+	i, err = r.repo.GetByIdSerial(context.Background(), int32(id))
+	if err == nil {
+		result := structToMap(i)
+		mapstructure.MapToStruct(result, &entity)
 	}
 
 	if err != nil {
