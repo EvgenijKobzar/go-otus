@@ -10,7 +10,7 @@ import (
 	"otus/internal/middleware"
 	"otus/internal/model"
 	"otus/internal/model/catalog"
-	"otus/internal/repository/mongo"
+	"otus/internal/repository/postgres/sqlc"
 )
 
 func Init(router *gin.Engine) {
@@ -49,7 +49,7 @@ func Init(router *gin.Engine) {
 }
 
 func getHandler[T catalog.HasId]() *handler.Handler[T] {
-	repo := mongo.NewRepository[T]()
+	repo := sqlc.NewRepository[T]()
 	service := core.New(repo)
 	return handler.New(service)
 }

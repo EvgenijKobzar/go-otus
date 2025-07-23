@@ -1,6 +1,20 @@
 version: '3'
 
 services:
+  postgres:
+    image: postgres:14
+    restart: on-failure
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: otus-go-basic
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - postgres
+
   mongodb:
     image: mongo:latest
     ports:
@@ -14,7 +28,11 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+networks:
+  postgres:
+    driver: bridge
 
 volumes:
+  postgres:
   mongodb_data:
   redis_data:
