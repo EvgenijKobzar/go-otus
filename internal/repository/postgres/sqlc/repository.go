@@ -45,12 +45,15 @@ func (r *Repository[T]) Save(entity T) error {
 func (r *Repository[T]) add(entity T) error {
 	var err error
 	var typeId int
+	var id int32
 
-	m, _ := mapstructure.StructToMap(entity)
 	if typeId, err = resolveTypeIdByEntityType[T](); err == nil {
 		switch typeId {
+
 		case 2:
-			id, err := r.repo.AddSerial(context.Background(), AddSerialParams{
+			m, _ := mapstructure.StructToMap(entity)
+
+			id, err = r.repo.AddSerial(context.Background(), AddSerialParams{
 				Sort: sql.NullInt32{
 					Int32: int32(m["sort"].(float64)),
 					Valid: true,
@@ -135,6 +138,7 @@ func (r *Repository[T]) update(entity T) error {
 				// TODO
 			}
 		}
+
 	}
 
 	return err
@@ -158,21 +162,28 @@ func (r *Repository[T]) Delete(id int) error {
 
 	return err
 }
-
 func (r *Repository[T]) GetAll() ([]T, error) {
 	var err error
+	var typeId int
 	var items []T
 
-	var rows []MoviesOnlineSerial
-	rows, err = r.repo.GetAllSerial(context.Background())
-	if err == nil {
-		for _, item := range rows {
-			entity := new(T)
+	if typeId, err = resolveTypeIdByEntityType[T](); err == nil {
+		switch typeId {
+		case 2:
+			var rows []MoviesOnlineSerial
+			rows, err = r.repo.GetAllSerial(context.Background())
+			if err == nil {
+				for _, item := range rows {
+					entity := new(T)
 
-			m := structToMap(item)
-			mapstructure.MapToStruct(m, &entity)
+					m := structToMap(item)
+					mapstructure.MapToStruct(m, &entity)
 
-			items = append(items, *entity)
+					items = append(items, *entity)
+				}
+			}
+		case 1, 3, 4:
+			// TODO
 		}
 	}
 
@@ -182,12 +193,20 @@ func (r *Repository[T]) GetAll() ([]T, error) {
 func (r *Repository[T]) GetById(id int) (T, error) {
 	var entity T
 	var err error
+	var typeId int
 
-	var i MoviesOnlineSerial
-	i, err = r.repo.GetByIdSerial(context.Background(), int32(id))
-	if err == nil {
-		result := structToMap(i)
-		mapstructure.MapToStruct(result, &entity)
+	if typeId, err = resolveTypeIdByEntityType[T](); err == nil {
+		switch typeId {
+		case 2:
+			var i MoviesOnlineSerial
+			i, err = r.repo.GetByIdSerial(context.Background(), int32(id))
+			if err == nil {
+				result := structToMap(i)
+				mapstructure.MapToStruct(result, &entity)
+			}
+		case 1, 3, 4:
+			// TODO
+		}
 	}
 
 	if err != nil {
