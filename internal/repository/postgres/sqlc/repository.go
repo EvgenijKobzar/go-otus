@@ -4,14 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	_ "github.com/lib/pq"
 	"log"
 	"os"
 	"otus/internal/model"
-	"otus/pkg/lib/mapstructure"
-
-	//"otus/internal/model"
-	_ "github.com/lib/pq"
 	"otus/internal/model/catalog"
+	"otus/pkg/lib/mapstructure"
 )
 
 const AccountType = 1
