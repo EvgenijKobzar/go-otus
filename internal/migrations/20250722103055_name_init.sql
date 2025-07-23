@@ -1,6 +1,6 @@
 -- +goose Up
 -- +goose StatementBegin
-create table if not exists movies_online.serial
+create table if not exists movies_online.serials
 (
     id        serial primary key,
     sort      integer,
@@ -15,23 +15,23 @@ create table if not exists movies_online.serial
     created_at timestamp with time zone not null default now(),
     updated_at timestamp with time zone not null default now()
     );
-INSERT INTO movies_online.serial (SORT, ACTIVE, FILE_ID, TITLE, PRODUCTION_PERIOD, RATING, QUALITY, DURATION)
+INSERT INTO movies_online.serials (SORT, ACTIVE, FILE_ID, TITLE, PRODUCTION_PERIOD, RATING, QUALITY, DURATION)
 VALUES
     (100, 'Y', 1, 'Breaking Bad', '2008-2013', 8.9, 'hd', 47),
     (200,	'Y',	2,	'Лучше звоните Солу',	'2015-2022',	8.3,	'4k',	46),
     (300,	'Y',	3,	'El Camino: Во все тяжкие',	'2019',	7.2,	'8k',	122);
 
-create table if not exists movies_online.season
+create table if not exists movies_online.seasons
 (
     id        serial primary key,
-    serial_id int references movies_online.serial(id),
+    serial_id int references movies_online.serials(id),
     sort      integer,
     active    char(1) default 'Y',
     title varchar(50) DEFAULT NULL,
     created_at timestamp with time zone not null default now(),
     updated_at timestamp with time zone not null default now()
 );
-INSERT INTO movies_online.season (SERIAL_ID, SORT, ACTIVE, TITLE)
+INSERT INTO movies_online.seasons (SERIAL_ID, SORT, ACTIVE, TITLE)
 VALUES
     (1,	100,	'Y',	'Сезон - 1'),
     (1,	300,	'Y',	'Сезон - 3'),
@@ -41,14 +41,14 @@ VALUES
     (2,	600,	'Y',	'Сезон - 1'),
     (3,	1000,	'Y',	'Сезон-1');
 
-create table if not exists movies_online.episode
+create table if not exists movies_online.episodes
 (
     id        serial primary key,
     quality varchar(50) DEFAULT NULL,
     rating float DEFAULT NULL,
     production_period varchar(50) DEFAULT NULL,
-    serial_id int references movies_online.serial(id),
-    season_id int references movies_online.season(id),
+    serial_id int references movies_online.serials(id),
+    season_id int references movies_online.seasons(id),
     sort      integer,
     active    char(1) default 'Y',
     file_id int DEFAULT NULL,
@@ -58,7 +58,7 @@ create table if not exists movies_online.episode
     created_at timestamp with time zone not null default now(),
     updated_at timestamp with time zone not null default now()
 );
-INSERT INTO movies_online.episode (QUALITY, RATING, PRODUCTION_PERIOD, SERIAL_ID, SEASON_ID, SORT, ACTIVE, FILE_ID, TITLE, DURATION, DESCRIPTION)
+INSERT INTO movies_online.episodes (QUALITY, RATING, PRODUCTION_PERIOD, SERIAL_ID, SEASON_ID, SORT, ACTIVE, FILE_ID, TITLE, DURATION, DESCRIPTION)
 VALUES
 
     ('4K',	8.9,	'2013',	1,	1,	110,	'Y',	0,	'Кот в мешке…',	 	48,	'Уолтер и Джесси пытаются избавиться от трупов в своем фургоне. Скайлер замечает странности в поведении мужа.'),
@@ -135,22 +135,23 @@ VALUES
     ('4K',	8.9,	'2013',	2,	6,	800,	'Y',	10,	'Марко',	 	49,	'Джимми цепляется за возможность воссоединиться со старым другом. Чак приспосабливается к новому образу жизни.'),
     ('4K',	8.9,	'2013',	3,	7,	810,	'Y',	1,	'El Camino: A Breaking Bad Movie',	 	122,	'«You either run from things, or you face them»');
 
-create table if not exists movies_online.account
+create table if not exists movies_online.accounts
 (
-    id        serial primary key,
-    firstName varchar(150) DEFAULT NULL,
-    lastName varchar(150) DEFAULT NULL,
-    login varchar(150) DEFAULT NULL,
-    Password varchar(150) DEFAULT NULL,
-    created_at timestamp with time zone not null default now(),
-    updated_at timestamp with time zone not null default now()
+    ID        serial primary key,
+    FIRST_NAME varchar(150) DEFAULT NULL,
+    LAST_NAME varchar(150) DEFAULT NULL,
+    Name varchar(150) DEFAULT NULL,
+    LOGIN varchar(150) DEFAULT NULL,
+    PASSWORD varchar(150) DEFAULT NULL,
+    CREATED_AT timestamp with time zone not null default now(),
+    UPDATED_AT timestamp with time zone not null default now()
     );
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
-drop table movies_online.episode;
-drop table movies_online.season;
-drop table movies_online.serial;
-drop table movies_online.account;
+drop table movies_online.episodes;
+drop table movies_online.seasons;
+drop table movies_online.serials;
+drop table movies_online.accounts;
 -- +goose StatementEnd

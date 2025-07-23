@@ -7,7 +7,7 @@ import (
 	"otus/internal/lib/hash"
 	"otus/internal/lib/jwt"
 	"otus/internal/model"
-	"otus/internal/repository/mongo"
+	"otus/internal/repository/postgres/gorm"
 )
 
 type AccountLoginRequest struct {
@@ -81,7 +81,7 @@ func RegisterAccount(c *gin.Context) {
 
 	account.Password = hashedPassword
 
-	repo := mongo.NewRepository[*model.Account]()
+	repo := gorm.NewRepository[*model.Account]()
 	if err = repo.Save(&account); err != nil {
 		c.JSON(501, gin.H{"error": "Save hash failed"})
 	}
@@ -147,7 +147,7 @@ func LoginAccount(c *gin.Context) {
 }
 
 func getAccountByLogin(login string) (*model.Account, error) {
-	repo := mongo.NewRepository[*model.Account]()
+	repo := gorm.NewRepository[*model.Account]()
 	items, _ := repo.GetAll()
 	for _, item := range items {
 		if item.Login == login {
